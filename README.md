@@ -1,12 +1,17 @@
 # AutoCommit
+AutoCommit is a CLI tool that locally creates concise commit messages by analyzing code changes with AI models such as Ollama's Llama.
 
-AutoCommit is a local CLI tool that generates concise commit messages by analyzing `git diff` output using AI models like Ollama's Llama.
 
 ## Features
 
 - **Local AI-Powered**: Generates commit messages locally without external dependencies.
+- **Editable Commit Messages**: Generated commit messages can be reviewed and edited as needed.
 - **Secure & Offline**: Operates entirely on your system, ensuring data privacy.
 - **Easy Integration**: Simple command-line tool to streamline your commit process.
+
+## Status
+
+This tool is currently under development. Stay tuned for updates!
 
 ## Installation
 
