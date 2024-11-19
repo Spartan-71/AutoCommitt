@@ -1,4 +1,4 @@
-![2](https://github.com/user-attachments/assets/40bd94d5-60a0-4abd-829a-4b697e2b2744)
+![auto-commit](https://github.com/user-attachments/assets/c5ef1117-5a9a-46a5-94ca-fa050cf43790)
 
 
 AutoCommit is a CLI tool that locally creates concise commit messages by analyzing code changes with AI models such as Ollama's Llama.
