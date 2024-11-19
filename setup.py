@@ -23,18 +23,22 @@ from setuptools import setup, find_packages
 
 setup(
     name="autocommit",
-    version="0.0.1",
+    version="0.1.0",
     author="Spartan (Anish Dabhane)",
     author_email="<anishdabhane@gmail.com>",
     description="A CLI tool for generating editable commit messages with local AI models",
     packages=find_packages(),
     # install_requires=requirements,
-    install_requires=['ollama'],
-    keywords=["autocommit","aicommit","git diff","git automation","CLI tool","local AI"],
+    install_requires=["ollama"],
+    keywords=[
+        "autocommit",
+        "aicommit",
+        "git diff",
+        "git automation",
+        "CLI tool",
+        "local AI",
+    ],
     entry_points={
-        "console_scripts": [
-            "autocommit = autocommit:hello",
-            "ac = autocommit:run"
-        ]
+        "console_scripts": ["autocommit = autocommit:hello", "ac = autocommit:run"]
     },
 )
