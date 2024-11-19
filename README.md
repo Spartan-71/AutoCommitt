@@ -1,48 +1,84 @@
-![auto-commit](https://github.com/user-attachments/assets/c5ef1117-5a9a-46a5-94ca-fa050cf43790)
+![auto-commit](https://github.com/user-attachments/assets/ff7399cb-f09b-4f3a-965c-ee66bd8233e2)
+
+AutoCommit is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (1B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
+
+<div align="center">
+
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+
+</div>
 
 
-AutoCommit is a CLI tool that locally creates concise commit messages by analyzing code changes with AI models such as Ollama's Llama.
 
+## ✨ Features
 
-## Features
+- **Local AI-Powered**: Generates commit messages using a small 1B parameter model
+- **Resource Efficient**: Minimal RAM and CPU usage with optimized model size
+- **Privacy-First**: All operations performed locally, ensuring data privacy
+- **Flexible Editing**: Review and edit generated messages before committing
+- **Git Integration**: Seamlessly works with your existing Git workflow
 
-- **Local AI-Powered**: Generates commit messages locally without external dependencies.
-- **Editable Commit Messages**: Generated commit messages can be reviewed and edited as needed.
-- **Secure & Offline**: Operates entirely on your system, ensuring data privacy.
-- **Easy Integration**: Simple command-line tool to streamline your commit process.
+## 🚀 Coming Soon
 
-## Status
+- **Python Package**: Easy installation via `pip install autocommit`
+- **Cross-Platform**: Support for Windows, macOS, and Linux
 
-This tool is currently under development. Stay tuned for updates!
+## 🛠️ Installation
 
-## Installation
+### Prerequisites
+- Python 3.8 or higher
+- Git installed and configured
+- Ollama installed locally
+- Minimum 4GB RAM
 
-1. **Clone the Repo**:
+### Steps
+
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/yourusername/AutoCommit.git
    cd AutoCommit
    ```
-2. **Install Dependencies**:
+
+2. **Install Dependencies**
    ```bash
-   pip install ollama
+   pip install -r requirements.txt
    ```
 
-## Usage
+3. **Verify Installation**
+   ```bash
+   python -m autocommit --version
+   ```
 
-Run AutoCommit with:
+## 📖 Usage
+
 ```bash
 python main.py
 ```
-The tool will:
-- Capture `git diff` output.
-- Generate a commit message using the local AI model.
 
-## Error Handling
+## 🤝 Contributing
 
-- **Model Auto-Pull**: Pulls the model if not available.
-- **Detailed Errors**: Provides clear messages for troubleshooting.
+We welcome contributions! Here's how you can help:
 
-## License
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Licensed under the Apache License 2.0. See the LICENSE file for more details.
+Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
+## 📊 Project Status
+
+Current Version: 0.1.0 (Beta)
+
+- [x] Basic commit message generation
+- [x] Local AI model integration (1B parameters)
+- [ ] Python package release
+- [ ] Cross-platform testing
+- [ ] Interactive mode
+- [ ] Custom template support
+
+## 📄 License
+
+Licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
