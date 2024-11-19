@@ -82,8 +82,8 @@ We love suggestions! Please:
 
 ## 📢 Communication
 
-- For questions: Open a [Discussion](https://github.com/yourusername/AutoCommit/discussions)
-- For bugs: Open an [Issue](https://github.com/yourusername/AutoCommit/issues)
+- For questions: Open a [Discussion](https://github.com/Spartan-71/AutoCommitt/discussions)
+- For bugs: Open an [Issue](https://github.com//Spartan-71/AutoCommitt/issues)
 - For security issues: Contact maintainers directly
 
 Thank you for contributing to AutoCommit! 🎉
