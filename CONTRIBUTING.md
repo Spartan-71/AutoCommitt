@@ -1,6 +1,6 @@
-# 🤝 Contributing to AutoCommit
+# 🤝 Contributing to AutoCommitt
 
-First off, thanks for taking the time to contribute! We're excited to welcome you to the AutoCommit community.
+First off, thanks for taking the time to contribute! We're excited to welcome you to the AutoCommitt community.
 
 ## 📋 Table of Contents
 
@@ -20,7 +20,7 @@ This project and everyone participating in it are governed by our Code of Conduc
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/AutoCommit.git
+   git clone https://github.com/your-username/AutoCommitt.git
    ```
 3. Create a virtual environment:
    ```bash
@@ -58,7 +58,7 @@ This project and everyone participating in it are governed by our Code of Conduc
 
 ### Commit Messages
   ```
-  use autocommit itself :)
+  use autocommitt itself :)
   ```
 
 ## 🐛 Reporting Bugs
@@ -86,4 +86,4 @@ We love suggestions! Please:
 - For bugs: Open an [Issue](https://github.com//Spartan-71/AutoCommitt/issues)
 - For security issues: Contact maintainers directly
 
-Thank you for contributing to AutoCommit! 🎉
+Thank you for contributing to AutoCommitt! 🎉
