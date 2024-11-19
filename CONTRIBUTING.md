@@ -65,13 +65,8 @@ This project and everyone participating in it are governed by our Code of Conduc
 - Keep functions focused and concise
 
 ### Commit Messages
-- Use conventional commits format:
   ```
-  feat: add new feature
-  fix: resolve bug
-  docs: update documentation
-  test: add tests
-  refactor: code changes
+  use autocommit itself :)
   ```
 
 ## 🐛 Reporting Bugs
