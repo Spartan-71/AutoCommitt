@@ -125,7 +125,7 @@ def perform_git_commit(message: str) -> bool:
     #     print(e.stderr)
     #     return False
 
-def main():
+def run():
     """Main function to orchestrate the git diff analysis and commit message generation."""
     # print("\n--> Executing the command...\n")
     # print("--> git diff --staged")
@@ -144,5 +144,5 @@ def main():
         # Perform the git commit
         perform_git_commit(final_message)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     run()
