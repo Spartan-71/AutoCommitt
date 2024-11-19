@@ -1,6 +1,6 @@
 ![2](https://github.com/user-attachments/assets/17718ea3-c71b-410f-bfa7-b6e219580baa)
 
-AutoCommitt is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (1B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
+AutoCommitt is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (3B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
 
 <div align="center">
 
@@ -13,7 +13,7 @@ AutoCommitt is a lightweight CLI tool that automatically generates meaningful co
 
 ## ✨ Features
 
-- **Local AI-Powered**: Generates commit messages using a small 1B parameter model
+- **Local AI-Powered**: Generates commit messages using a small 3B parameter model
 - **Resource Efficient**: Minimal RAM and CPU usage with optimized model size
 - **Privacy-First**: All operations performed locally, ensuring data privacy
 - **Flexible Editing**: Review and edit generated messages before committing
@@ -30,7 +30,7 @@ AutoCommitt is a lightweight CLI tool that automatically generates meaningful co
 - Python 3.8 or higher
 - Git installed and configured
 - Ollama installed locally
-- Minimum 4GB RAM
+- Minimum 8GB RAM
 
 ### Steps
 
@@ -70,11 +70,11 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
 ## 📊 Project Status
 
-Current Version: 0.1.0 (Beta)
+Current Version: 0.1.0 (Alpha)
 
 - [x] Basic commit message generation
-- [x] Local AI model integration (1B parameters)
-- [ ] Python package release
+- [x] Local AI model integration (3B parameters)
+- [x] Python package release
 - [ ] Cross-platform testing
 - [ ] Interactive mode
 - [ ] Custom template support
