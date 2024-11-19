@@ -1,4 +1,4 @@
-![auto-commit](https://github.com/user-attachments/assets/ff7399cb-f09b-4f3a-965c-ee66bd8233e2)
+![2](https://github.com/user-attachments/assets/17718ea3-c71b-410f-bfa7-b6e219580baa)
 
 AutoCommitt is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (1B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
 
