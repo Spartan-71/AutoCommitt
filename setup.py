@@ -38,7 +38,14 @@ setup(
         "CLI tool",
         "local AI",
     ],
+    classifiers=[
+        "Development Status :: Alpha version",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3",
+        "Operating System :: Linux",
+    ],
     entry_points={
         "console_scripts": ["autocommit = autocommit:hello", "ac = autocommit:run"]
     },
+
 )
