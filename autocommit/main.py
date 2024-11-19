@@ -16,13 +16,17 @@ process = subprocess.Popen(
 output, error = process.communicate()
 
 # display the command output
-print("\n--> Output:\n")
+print("\n--> Output:")
 print(output)
-if error:
-    print("Error:", error)
-    print("Error in executing git diff command!!")
+if error or output == "":
+    if output == "":
+        print("Warning: No changes stagged!!")
+    else:
+        print("Error in executing git diff command!!")
+        print("Error:", error)
 
-if not error:
+
+else:
     print("\n--> Generating the commit msg...\n")
 
     # streaming response
@@ -35,7 +39,7 @@ if not error:
                 "role": "system",
                 "content": """You are a Git expert specializing in concise and meaningful commit messages based on git diff.Follow this format strictly:
                             feat: add <new feature>, fix: resolve <bug>, docs: update <documentation>, test: add <tests>, refactor: <code improvements>
-                            Generate only one commit message, no explanations. If the input is empty i.e no changes are stagged then output 'Warning: No changes stagged' """,
+                            Generate only one commit message, no explanations.""",
             },
             {"role": "user", "content": output},
         ],
