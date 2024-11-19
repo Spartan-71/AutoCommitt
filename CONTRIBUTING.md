@@ -56,14 +56,6 @@ This project and everyone participating in it are governed by our Code of Conduc
 4. Get at least one code review from maintainers
 5. Your PR will be merged once approved
 
-## 📝 Style Guidelines
-
-### Python Code Style
-- Follow PEP 8 guidelines
-- Use descriptive variable names
-- Add docstrings for functions and classes
-- Keep functions focused and concise
-
 ### Commit Messages
   ```
   use autocommit itself :)
