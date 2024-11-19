@@ -1,6 +1,6 @@
 ![auto-commit](https://github.com/user-attachments/assets/ff7399cb-f09b-4f3a-965c-ee66bd8233e2)
 
-AutoCommit is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (1B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
+AutoCommitt is a lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. It leverages Ollama's Llama model (1B parameters) to create concise, context-aware commit messages while keeping resource usage minimal.
 
 <div align="center">
 
@@ -47,7 +47,7 @@ AutoCommit is a lightweight CLI tool that automatically generates meaningful com
 
 3. **Verify Installation**
    ```bash
-   python -m autocommit --version
+   python -m autocommitt --version
    ```
 
 ## 📖 Usage
