@@ -21,7 +21,7 @@ AutoCommitt is a lightweight CLI tool that automatically generates meaningful co
 
 ## 🚀 Coming Soon
 
-- **Python Package**: Easy installation via `pip install autocommitt`
+- **Git hooks integration**: Compatible with all pre-commit hooks
 - **Cross-Platform**: Support for Windows, macOS, and Linux
 
 ## 🛠️ Installation
