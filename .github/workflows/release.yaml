@@ -84,7 +84,8 @@ jobs:
 
       - name: Set project version dynamically
         run: |
-        sed -i "s/version=.*/version='${{ needs.details.outputs.new_version }}',/" setup.py
+          new_version="${{ needs.details.outputs.new_version }}"
+          sed -i "s/version=.*/version='${new_version}',/" setup.py
 
       - name: Build source and wheel distribution
         run: |
