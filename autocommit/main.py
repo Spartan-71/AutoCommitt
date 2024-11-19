@@ -35,7 +35,7 @@ if not error:
                 "role": "system",
                 "content": """You are a Git expert specializing in concise and meaningful commit messages based on git diff.Follow this format strictly:
                             feat: add <new feature>, fix: resolve <bug>, docs: update <documentation>, test: add <tests>, refactor: <code improvements>
-                            Generate only one commit message, no explanations. If the input is empty i.e no changes are stagged then output appropriate warning.""",
+                            Generate only one commit message, no explanations. If the input is empty i.e no changes are stagged then output 'Warning: No changes stagged' """,
             },
             {"role": "user", "content": output},
         ],
