@@ -4,14 +4,6 @@ import readline  # Important for input editing
 from typing import Tuple, Optional
 
 def execute_git_command(command: list[str]) -> Tuple[str, Optional[str]]:
-    """
-    Execute a git command and return its output and error.
-    
-    Args:
-        command: List of command components
-    Returns:
-        Tuple of (output, error) strings
-    """
     try:
         process = subprocess.run(
             command, 
@@ -24,12 +16,6 @@ def execute_git_command(command: list[str]) -> Tuple[str, Optional[str]]:
         return None, e.stderr
 
 def check_staged_changes() -> Optional[str]:
-    """
-    Check for staged changes in git.
-    
-    Returns:
-        The git diff output if there are changes, None otherwise
-    """
     output, error = execute_git_command(["git", "diff", "--staged"])
     
     if error:
@@ -44,15 +30,6 @@ def check_staged_changes() -> Optional[str]:
     return output
 
 def generate_commit_message(diff_output: str, model: str = "llama3.2:3b") -> str:
-    """
-    Generate a commit message using the AI model based on git diff.
-    
-    Args:
-        diff_output: The git diff content
-        model: The AI model to use
-    Returns:
-        Generated commit message
-    """
     print("\n--> Generating the commit msg...\n")
     
     system_prompt = """You are a Git expert specializing in concise and meaningful commit messages based on git diff. Follow this format strictly:
@@ -77,14 +54,6 @@ def generate_commit_message(diff_output: str, model: str = "llama3.2:3b") -> str
     return message.strip()
 
 def edit_commit_message(initial_message: str) -> str:
-    """
-    Provide an interactive editing experience for the commit message.
-    
-    Args:
-        initial_message: The AI-generated commit message
-    Returns:
-        The edited commit message
-    """
     # Prefill the readline buffer with the initial message
     def prefill_input(prompt):
         def hook():
@@ -101,14 +70,6 @@ def edit_commit_message(initial_message: str) -> str:
     return final_message.strip() or initial_message
 
 def perform_git_commit(message: str) -> bool:
-    """
-    Perform git commit with the given message.
-    
-    Args:
-        message: Commit message
-    Returns:
-        Boolean indicating success of commit
-    """
     try:
         # Use shell=False for security and to avoid shell injection
         subprocess.run(
