@@ -33,7 +33,7 @@ class ollama_ai:
         return output
 
     def generate_commit_message(diff_output: str, model: str = model_name) -> str:
-        print("\n--> Generating the commit msg...\n")
+        # print("\n--> Generating the commit msg...\n")
         # feat/fix/docs/style/refactor/test/chore
         system_prompt = """You are a Git expert specializing in concise and meaningful commit messages based on git diff. Follow this format strictly:
                         feat: add <new feature>, fix: resolve <bug>, docs: update <documentation>, test: add <tests>, refactor: <code improvements>
@@ -82,10 +82,10 @@ class ollama_ai:
                 stderr=subprocess.PIPE,
                 text=True
             )
-            print("\n--> Commit successful!")
+            # print("\n--> Commit successful!")
             return True
         except subprocess.CalledProcessError as e:
-            print("\n--> Commit failed:")
+            # print("\n--> Commit failed:")
             print(e.stderr)
             return False
 
