@@ -24,13 +24,16 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 - Python 3.8 or higher
 - Git installed and configured
-- [Ollama](https://ollama.com/) installed locally with the Llama 3.2:3B model
 - Minimum 8GB RAM recommended
 
 ### Installation
 
 ```bash
 pip install autocommitt
+```
+Get the latest updated llama 3.2 (3 billion) model
+```bash
+ollama pull llama3.2:3b
 ```
 
 ### Usage
