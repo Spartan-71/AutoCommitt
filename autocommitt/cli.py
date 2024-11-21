@@ -159,7 +159,7 @@ def stop():
 
 @app.command()
 def gen():
-    """Generate and create a commit with an AI-generated message"""
+    """Generate a commit msg, edit it and press ENTER to commit."""
 
     changed_files = ollama_ai.check_staged_changes()
 
