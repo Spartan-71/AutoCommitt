@@ -13,7 +13,7 @@ setup(
     long_description=long_des,
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    install_requires=["ollama"],
+    install_requires=["ollama","typer"],
     keywords=[
         "autocommit",
         "aicommit",
