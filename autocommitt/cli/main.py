@@ -235,6 +235,56 @@ def list():
     ConfigManager.save_models(models)
     console.print(table)
 
+@app.command()
+def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")):
+    """Delete a model from available models"""
+    models = ConfigManager.get_models()
+    config = ConfigManager.get_config()
+    
+    # Check if model exists
+    if not OllamaManager.is_model_present(model_name):
+        console.print(f"[yellow]Model {model_name} doesn't exist, skipping deletion.[/yellow]")
+        raise typer.Exit(1)
+    
+    # Check if it's a default model
+    if models[model_name].get('status')=="active":
+        console.print(f"[red]Error: Cannot remove currently selected model[/red]")
+        console.print("Please switch to another model first using 'use' command")
+        raise typer.Exit(1)
+
+    if models[model_name].get("downloaded")=="no":
+        console.print(f"[yellow]Warning: Model: '{model_name}' is not downloaded![/yellow]")
+    
+    # Remove the model
+    OllamaManager.delete_model(model_name)
+
+@app.command()
+def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
+    """Select which model to use for generating commit messages"""
+    models = ConfigManager.get_models()
+    
+    if model_name not in models:
+        console.print(f"[red]Error: Unknown model '{model_name}'[/red]")
+        list()
+        raise typer.Exit(1)
+
+    if models[model_name]["downloaded"] != "yes":
+        OllamaManager.pull_model(model_name)
+    
+    models = ConfigManager.get_models()
+    config = ConfigManager.get_config()
+    # deactivated old model
+    models[config['model_name']]['status'] = "disabled"
+
+    models[model_name]["status"] ="active"
+    config['model_name'] = model_name
+
+    ConfigManager.save_config(config)
+    ConfigManager.save_models(models)
+
+    console.print(f"[green]Successfully switched to model: {model_name}[/green]")
+    # console.print(f"Description: {models[model_name]['description']}")
+
 
 if __name__ == "__main__":
     app()
