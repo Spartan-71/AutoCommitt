@@ -55,8 +55,8 @@ class OllamaManager:
         # # Input validation
         # if not isinstance(model_name, str):
         #     raise ValueError("model_name must be a string")
-        # if not model_name.strip():
-        #     raise ValueError("model_name cannot be empty")
+        if not model_name.strip():
+            raise ValueError("model_name cannot be empty")
 
         # # Configure logging
         # logger = logging.getLogger(__name__)
@@ -84,6 +84,7 @@ class OllamaManager:
             # Look for the model name in each line
             # This is more robust than simple string containment
             for model_line in models_list:
+                # print(model_line.split()[0].strip())
                 # Split on whitespace and take the first part (model name)
                 if model_line.split()[0].strip() == model_name:
                     return True
@@ -179,9 +180,9 @@ class OllamaManager:
                 # Check if pull was successful
                 if process.returncode == 0:
                     # updaing the table
-                    models = get_models()
+                    models = ConfigManager.get_models()
                     models[model_name]["downloaded"] = "yes"
-                    save_models(models)
+                    ConfigManager.save_models(models)
 
                     console.print(f"[green]Successfully pulled {model_name}![/green]")
                     return True
@@ -205,6 +206,49 @@ class OllamaManager:
         except Exception as e:
             console.print(f"[red]Unexpected error while pulling model: {str(e)}[/red]")
             return False
+
+    def delete_model(model_name: str) -> bool:
+        """
+        Deletes an Ollama model if it's already present.
+
+        Args:
+            model_name (str): The name of the model to delete
+
+        Returns:
+            bool: True if model deleted successfully, False if model doesn't exist
+        """
+        console = Console()
+
+        try:
+            # Delete the model
+            console.print(f"[yellow]Deleting {model_name}...[/yellow]")
+            result = subprocess.run(
+                ["ollama", "rm", model_name],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+
+            if result.returncode == 0:
+                # Update the models table
+                models = ConfigManager.get_models()
+                models[model_name]["downloaded"]="no"
+                ConfigManager.save_models(models)
+                console.print(f"[green]Successfully deleted {model_name}.[/green]")
+                return True
+            else:
+                error = result.stderr.strip()
+                console.print(f"[red]Error deleting {model_name}: {error}[/red]")
+                return False
+
+        except FileNotFoundError:
+            console.print("[red]Error: ollama command not found. Please ensure Ollama is installed and in PATH.[/red]")
+            return False
+        except Exception as e:
+            console.print(f"[red]Unexpected error while deleting model: {str(e)}[/red]")
+            return False
+
+
 
     # def main():
     #     """Main function to demonstrate model pulling functionality."""
