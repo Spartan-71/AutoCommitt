@@ -3,10 +3,10 @@ name: release
 on:
   push:
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
 
 env:
   PACKAGE_NAME: "autocommitt"
@@ -50,7 +50,7 @@ jobs:
           latest_previous_version=$(echo $response | jq --raw-output "select(.releases != null) | .releases | keys_unsorted | last")
           if [ -z "$latest_previous_version" ]; then
             echo "Package not found on PyPI."
-            latest_previous_version="0.0.0"
+            latest_previous_version="v0.0.0"
           fi
           echo "Latest version on PyPI: $latest_previous_version"
           echo "latest_previous_version=$latest_previous_version" >> $GITHUB_ENV
