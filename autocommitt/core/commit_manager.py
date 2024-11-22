@@ -3,16 +3,14 @@ import subprocess
 import readline  # Important for input editing
 from typing import Tuple, Optional
 
+
 class CommitManager:
     model_name: str = "llama3.2:3b"
 
     def execute_git_command(command: list[str]) -> Tuple[str, Optional[str]]:
         try:
             process = subprocess.run(
-                command, 
-                capture_output=True, 
-                text=True, 
-                check=True
+                command, capture_output=True, text=True, check=True
             )
             return process.stdout, None
         except subprocess.CalledProcessError as e:
@@ -60,9 +58,9 @@ class CommitManager:
             model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": diff_output}
+                {"role": "user", "content": diff_output},
             ],
-            stream=True
+            stream=True,
         )
 
         for chunk in stream:
@@ -78,6 +76,7 @@ class CommitManager:
             def hook():
                 readline.insert_text(initial_message)
                 readline.redisplay()
+
             readline.set_pre_input_hook(hook)
             user_input = input(prompt)
             readline.set_pre_input_hook()
@@ -92,11 +91,11 @@ class CommitManager:
         try:
             # Use shell=False for security and to avoid shell injection
             subprocess.run(
-                ['git', 'commit', '-m', message], 
+                ["git", "commit", "-m", message],
                 check=True,  # Raise an exception if the command fails
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
             )
             # print("\n--> Commit successful!")
             return True
@@ -123,6 +122,7 @@ class CommitManager:
 
             # Perform the git commit
             perform_git_commit(final_message)
+
 
 # if __name__ == "__main__":
 #     generate()
