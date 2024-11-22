@@ -29,7 +29,7 @@ setup(
         "Operating System :: Unix",
     ],
     entry_points={
-        "console_scripts": ["autocommitt = autocommitt.cli:app"]
+        "console_scripts": ["autocommitt = autocommitt.cli.main:app"]
     },
     url="https://github.com/Spartan-71/autocommitt",  # Update with your actual URL
     license="Apache-2.0",  # Specify your license type
