@@ -1,6 +1,6 @@
 ![2](https://github.com/user-attachments/assets/d1a4c15e-8bdf-448b-adc0-4a0c39a3a023)
 
-A lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. AutoCommitt leverages Ollama's Llama 3.2:3B model to create concise, context-aware commit messages while keeping resource usage minimal.
+A lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. AutoCommitt leverages Ollama to create concise, context-aware commit messages while keeping resource usage minimal.
 
 <div align="center">
 
@@ -12,7 +12,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 ## ✨ Features
 
-- **Local AI-Powered**: Generates commit messages using a small 3B parameter Llama 3.2 model
+- **Local AI-Powered**: Generates commit messages using a small LLM models
 - **Flexible Editing**: Review and edit generated messages before committing
 - **Privacy-First**: All operations performed locally, ensuring data privacy
 - **Git Integration**: Seamlessly works with your existing Git workflow
@@ -30,10 +30,6 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 ```bash
 pip install autocommitt
-```
-Get the latest updated llama 3.2 (3 billion) model
-```bash
-ollama pull llama3.2:3b
 ```
 
 ### Usage
@@ -75,7 +71,7 @@ That's it! 🎉
 ## 📊 Project Status
 
 - [x] Basic commit message generation
-- [x] Local AI model integration (Llama 3.2:3B)
+- [x] Local AI model integration
 - [x] Python package release
 - [ ] Cross-platform testing
 - [ ] Interactive mode
