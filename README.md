@@ -5,24 +5,24 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version v0.1.6](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
 
 </div>
 
 ## ✨ Features
 
-- **Local AI-Powered**: Generates commit messages using a small LLM models
+- **Local AI-Powered**: Generates commit messages using a small LLM models locally
 - **Flexible Editing**: Review and edit generated messages before committing
-- **Privacy-First**: All operations performed locally, ensuring data privacy
 - **Git Integration**: Seamlessly works with your existing Git workflow
-- **Resource-Efficient**: Minimal computational overhead with lightweight AI model
+- **Resource-Efficient**: Minimal computational overhead with lightweight LLM models
+- **Multiple Language Model Support**: Option to choose different local AI models
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.10 or higher
 - Git installed and configured
 - Minimum 8GB RAM recommended
 
@@ -43,7 +43,7 @@ pip install autocommitt
    ```bash
    autocommitt gen
    ```
-   This will generate a commit message based on your changes using the Llama 3.2:3B model. Edit it if needed.
+   This will generate a commit message based on your changes using the Llama 3.2:3B model (default). Edit it if needed.
 
 3. Press Enter to commit your changes.
 
@@ -56,11 +56,11 @@ That's it! 🎉
 
 ## 🔜 Roadmap
 
-- **Git Hooks Integration**: Compatible with pre-commit hooks
-- **Cross-Platform Support**: Enhanced compatibility for Windows, macOS, and Linux
-- **Custom Templates**: Support for user-defined commit message templates
 - **Interactive Mode**: Enhanced CLI interface for improved user experience
-- **Multiple Language Model Support**: Option to choose different local AI models
+- **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
+- **Custom Templates**: Support for user-defined commit message templates
+- **Git Hooks Integration**: Compatible with pre-commit hooks
+
 
 ## 🐛 Support
 
@@ -73,10 +73,10 @@ That's it! 🎉
 - [x] Basic commit message generation
 - [x] Local AI model integration
 - [x] Python package release
-- [ ] Cross-platform testing
+- [x] Multi-model support
 - [ ] Interactive mode
+- [ ] Cross-platform testing
 - [ ] Custom template support
-- [ ] Multi-model support
 
 ## 📄 License
 
