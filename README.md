@@ -10,7 +10,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 </div>
 
-## ✨ Features
+## Features
 
 - **Local AI-Powered**: Generates commit messages using a small LLM models locally
 - **Flexible Editing**: Review and edit generated messages before committing
@@ -18,7 +18,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 - **Resource-Efficient**: Minimal computational overhead with lightweight LLM models
 - **Multiple Language Model Support**: Option to choose different local AI models
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -52,9 +52,9 @@ pip install autocommitt
    autocommitt stop
    ```
 
-That's it! 🎉
+That's it! :)
 
-## 🔜 Roadmap
+## Roadmap
 
 - **Interactive Mode**: Enhanced CLI interface for improved user experience
 - **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
@@ -62,13 +62,13 @@ That's it! 🎉
 - **Git Hooks Integration**: Compatible with pre-commit hooks
 
 
-## 🐛 Support
+## Support
 
 - Found a bug? [Open an issue](https://github.com/Spartan-71/AutoCommitt/issues)
 - Have questions? [Start a discussion](https://github.com/Spartan-71/AutoCommitt/discussions)
 - Want to contribute? Check out our [Contributing Guidelines](CONTRIBUTING.md)
 
-## 📊 Project Status
+## Project Status
 
 - [x] Basic commit message generation
 - [x] Local AI model integration
@@ -78,11 +78,11 @@ That's it! 🎉
 - [ ] Cross-platform testing
 - [ ] Custom template support
 
-## 📄 License
+## License
 
 Licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-## 👩‍💻 For Developers
+## For Developers
 
 Interested in contributing to AutoCommitt? We'd love your help! Check out our [Contributing Guidelines](CONTRIBUTING.md) for:
 
