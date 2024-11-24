@@ -18,14 +18,14 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 - **Multiple Language Model Support**: Option to choose different local AI models
 
 ## Setup
-#### Prerequisites
+### Prerequisites
 
 - **RAM** (min):  
    - 8GB for smaller models (3B)  
    - 16GB for optimal performance
 - **GPU** (Optional): Boosts performance, but not required
   
-#### Installation
+### Installation
 
 > It is recommended to use a virtual environment.
 
@@ -33,7 +33,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 pip install autocommitt
 ```
 
-#### Upgrading
+### Upgrading
 > Check the installed version with:
 ```bash
 pip list | grep autocommitt
@@ -87,11 +87,12 @@ pip install -U autocommitt
 
 #### 2. Deleting a Model
 
-> Since models require a significant amount of memory (minimum 2GB), it is recommended to use only one model and delete the rest to free up space.
-
 ```bash
 autocommitt rm <model_name>
 ```
+> **Note**: Since models require a significant amount of memory (minimum 2GB), it is recommended to use only one model and delete the rest to free up space.
+
+
 
 ## How It Works
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
@@ -104,5 +105,16 @@ It runs the `git diff --staged` command to gather all staged changes and process
 ## Contributing
 We welcome contributions to this project! Whether you'd like to report a bug, fix an existing issue, or implement a new feature, check out the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page to get started. Be sure to review our [Contribution Guide](CONTRIBUTING.md) for detailed instructions on how to set up, test, and contribute to the project.
 
-For discussions, questions, or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im) Your contributions and ideas are greatly appreciated! 🚀
+For discussions, questions, or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im) Your contributions and ideas are greatly appreciated!
 
+## Acknowledgments
+
+We would like to express our gratitude to the following open-source projects that made AutoCommitt possible:
+
+- [Ollama](https://ollama.ai/) - An impressive project that makes running large language models locally both possible and practical. Their API and model management system are integral to AutoCommitt's local AI capabilities.
+- [Typer](https://typer.tiangolo.com/) - Created by [Sebastián Ramírez](https://github.com/tiangolo), the same author of FastAPI. Typer provides an elegant CLI builder that forms the backbone of our command-line interface.
+
+
+Special thanks to the maintainers and contributors of these projects for their fantastic work in making developer tools more accessible and powerful.
+
+---
