@@ -4,9 +4,9 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 <div align="center">
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
+![PyPI Downloads](https://static.pepy.tech/badge/autocommitt)
 
 </div>
 
