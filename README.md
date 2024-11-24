@@ -20,26 +20,26 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 ## Setup
 ### Prerequisites
 
-- **RAM** (min):  
+- **RAM** (minimum):  
    - 8GB for smaller models (3B)  
    - 16GB for optimal performance
 - **GPU** (Optional): Boosts performance, but not required
   
 ### Installation
 
-> It is recommended to use a virtual environment.
+It is recommended to use a virtual environment.
 
 ```bash
 pip install autocommitt
 ```
 
 ### Upgrading
-> Check the installed version with:
+Check the installed version with:
 ```bash
 pip list | grep autocommitt
 ```
 
-> If it's not [latest](https://github.com/Spartan-71/AutoCommitt/releases/), make sure to upgrade.
+If it's not [latest](https://github.com/Spartan-71/AutoCommitt/releases/), make sure to upgrade.
 
 ```bash
 pip install -U autocommitt
@@ -69,7 +69,7 @@ pip install -U autocommitt
 
 ## Additional Commands
 
-> By default, **AutoCommitt** uses the `llama3.2:3b` model to generate commit messages.
+By default, **AutoCommitt** uses the `llama3.2:3b` model to generate commit messages.
 
 #### 1. Using a Custom Model
 
@@ -77,8 +77,6 @@ pip install -U autocommitt
    ```bash
    autocommitt list
    ```
-   > **Note**: The full list of models, along with their configurations, is stored in the `.config/autocommitt` directory.
-
 - To select and set a model as active:
    ```bash
    autocommitt use <model_name>
@@ -97,7 +95,7 @@ autocommitt rm <model_name>
 ## How It Works
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
-## Roadmap
+## Future Enhancements
 - **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
 - **Git Hooks Integration**: Compatible with pre-commit hooks
 - **Custom Templates**: Support for user-defined commit message templates
