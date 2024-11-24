@@ -195,11 +195,16 @@ def gen(
             result = subprocess.run(
                 ["git", "push"],
                 check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                capture_output=True,
                 text=True,
             )
-            console.print(result.stdout)
+            # Print the output in a panel
+            if result.stdout:
+                console.print(Panel(
+                    result.stdout.strip(),
+                    title="Push Output",
+                    border_style="blue"
+                ))
             console.print(f"[green]Push successful![/green]")
             return True
 
