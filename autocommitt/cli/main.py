@@ -191,17 +191,30 @@ def gen(
 
     if push:
         try:
-            console.print("Pushing...")
-            subprocess.run(
-                ["git","push"],
+            console.print("[blue]Pushing changes to the remote repository...[/blue]")
+            result = subprocess.run(
+                ["git", "push"],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
             )
+            console.print(result.stdout)
+            console.print(f"[green]Push successful![/green]")
             return True
+
         except subprocess.CalledProcessError as e:
-            console.print(f"[red]Error: Auto pushing FAILED[\red]")
+            console.print(f"[red]Error: Auto pushing FAILED.[/red]")
+            console.print(f"[red]{e.stderr}[/red]")
+            return False
+
+        except FileNotFoundError:
+            console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+            return False
+
+        except Exception as e:
+            console.print(f"[red]Unexpected error: {str(e)}[/red]")
+            return False
 
 
 
