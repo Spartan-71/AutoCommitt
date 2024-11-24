@@ -6,7 +6,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
-[![PyPI version v0.1.6](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
+[![PyPI version](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
 
 </div>
 
@@ -61,13 +61,6 @@ That's it! :)
 - **Custom Templates**: Support for user-defined commit message templates
 - **Git Hooks Integration**: Compatible with pre-commit hooks
 
-
-## Support
-
-- Found a bug? [Open an issue](https://github.com/Spartan-71/AutoCommitt/issues)
-- Have questions? [Start a discussion](https://github.com/Spartan-71/AutoCommitt/discussions)
-- Want to contribute? Check out our [Contributing Guidelines](CONTRIBUTING.md)
-
 ## Project Status
 
 - [x] Basic commit message generation
@@ -78,15 +71,9 @@ That's it! :)
 - [ ] Cross-platform testing
 - [ ] Custom template support
 
-## License
 
-Licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+## Contributing
+We welcome contributions to this project! Whether you'd like to report a bug, fix an existing issue, or implement a new feature, check out the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page to get started. Be sure to review our [Contribution Guide](CONTRIBUTING.md) for detailed instructions on how to set up, test, and contribute to the project.
 
-## For Developers
+For discussions, questions, or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im) Your contributions and ideas are greatly appreciated! 🚀
 
-Interested in contributing to AutoCommitt? We'd love your help! Check out our [Contributing Guidelines](CONTRIBUTING.md) for:
-
-- Setting up the development environment
-- Building from source
-- Pull request process
-- Development roadmap
