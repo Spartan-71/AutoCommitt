@@ -194,7 +194,7 @@ def gen(
             console.print("Pushing...")
             subprocess.run(
                 ["git","push"],
-                check==True,
+                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
