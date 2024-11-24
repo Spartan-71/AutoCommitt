@@ -156,7 +156,9 @@ def stop():
 
 
 @app.command()
-def gen():
+def gen(
+    push: bool = typer.Option(False, "--push", "-p", help="Enable auto-push"),
+):
     """Generate a commit msg, edit it and press ENTER to commit."""
 
     changed_files = CommitManager.check_staged_changes()
@@ -187,10 +189,8 @@ def gen():
     else:
         console.print(f"[red]Commit FAILED![/green]")
 
-    # if push:
-    #     origin = repo.remote('origin')
-    #     origin.push()
-    #     console.print("[green]Successfully pushed changes[/green]")
+    if push:
+        console.print("Auto push is activated!!")
 
 
 @app.command()
