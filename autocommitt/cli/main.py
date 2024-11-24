@@ -200,13 +200,9 @@ def gen(
             )
             # Print the output in a panel
             if result.stdout:
-                console.print(Panel(
-                    result.stdout.strip(),
-                    title="Push Output",
-                    border_style="blue"
-                ))
-            console.print(f"[green]Push successful![/green]")
-            return True
+                console.print(result.stdout.strip())
+                console.print(f"[green]Push successful![/green]")
+                return True
 
         except subprocess.CalledProcessError as e:
             console.print(f"[red]Error: Auto pushing FAILED.[/red]")
