@@ -108,7 +108,7 @@ class OllamaManager:
             )
             return False
 
-    def pull_model(model_name: str, timeout: Optional[float] = 600.0) -> bool:
+    def pull_model(model_name: str, timeout: float = 5.00) -> bool:
         """
         Pulls an Ollama model if it's not already present.
 
@@ -125,16 +125,13 @@ class OllamaManager:
 
         try:
             # Check if model is already pulled
-            # present: bool = is_model_present(model_name)
-            # if present:
-            #     console.print(f"[green]Model {model_name} is already pulled and ready to use.[/green]")
-            #     return True
+            present: bool = OllamaManager.is_model_present(model_name)
+            if present:
+                console.print(f"[green]Model {model_name} is already pulled and ready to use.[/green]")
+                return True
 
             # Model needs to be pulled
             console.print(f"[yellow]Pulling {model_name}...[/yellow]")
-            console.print(
-                "[blue]NOTE: Download time depends on your internet speed and model size[/blue]"
-            )
 
             # Create progress display
             with Progress(
@@ -160,26 +157,30 @@ class OllamaManager:
 
                 # Monitor the pull process
                 while True:
-                    if process.poll() is not None:
-                        break
 
-                    if timeout and (time.time() - start_time) > timeout:
+                    elapsed_time = time.time() - start_time
+                    if elapsed_time > timeout:
                         process.kill()
+                        process.communicate()  # Ensure buffers are cleared
                         console.print(
                             f"[red]Error: Pull operation timed out after {timeout} seconds[/red]"
                         )
                         return False
 
-                    output = process.stdout.readline() if process.stdout else ""
-                    if output:
-                        # Update progress description with latest output
-                        progress.update(task, description=output.strip())
+                    # Read output line by line without blocking
+                    if process.stdout:
+                        output = process.stdout.readline()
+                        if output:
+                            progress.update(task, description=output.strip())
+                            progress.update(task, description=output.strip())
+
 
                     time.sleep(0.1)
 
                 # Check if pull was successful
+                process.communicate()  # Ensure no leftover output is blocking
                 if process.returncode == 0:
-                    # updaing the table
+                    # Update the table
                     models = ConfigManager.get_models()
                     models[model_name]["downloaded"] = "yes"
                     ConfigManager.save_models(models)
@@ -190,12 +191,6 @@ class OllamaManager:
                     error = process.stderr.read() if process.stderr else "Unknown error"
                     console.print(f"[red]Error pulling model: {error.strip()}[/red]")
                     return False
-
-        except subprocess.TimeoutExpired:
-            console.print(
-                f"[red]Error: Command timed out while pulling {model_name}[/red]"
-            )
-            return False
 
         except FileNotFoundError:
             console.print(
