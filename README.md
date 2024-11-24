@@ -18,18 +18,32 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 - **Resource-Efficient**: Minimal computational overhead with lightweight LLM models
 - **Multiple Language Model Support**: Option to choose different local AI models
 
-## Quick Start
 
 ### Prerequisites
 
-- Python 3.10 or higher
-- Git installed and configured
-- Minimum 8GB RAM recommended
-
+- **Python 3.10** or higher
+- **Git** installed and configured
+- **RAM**:  
+   - 8GB for smaller models (3B)  
+   - 16GB for optimal performance
+- **GPU** (Optional): Boosts performance, but not required
+  
 ### Installation
 
+> It is recommended to use virtual environment.
+ 
 ```bash
 pip install autocommitt
+```
+OR
+```bash
+uv pip install autocommitt
+```
+### Upgrading
+> If u already have autocommitt installed, then make sure to upgrade to latest version.
+
+```bash
+pip install -U autocommitt
 ```
 
 ### Usage
@@ -70,6 +84,9 @@ That's it! :)
 - [ ] Interactive mode
 - [ ] Cross-platform testing
 - [ ] Custom template support
+
+## How It Works
+It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
 
 ## Contributing
