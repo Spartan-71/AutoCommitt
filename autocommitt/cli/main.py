@@ -308,7 +308,6 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     ConfigManager.save_models(models)
 
     console.print(f"[green]Successfully switched to model: {model_name}[/green]")
-    # console.print(f"Description: {models[model_name]['description']}")
 
 
 if __name__ == "__main__":
