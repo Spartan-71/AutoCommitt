@@ -208,9 +208,9 @@ def gen(
             console.print(f"[red]{e.stderr}[/red]")
             return False
 
-        except FileNotFoundError:
-            console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
-            return False
+        # except FileNotFoundError:
+        #     console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+        #     return False
 
         except Exception as e:
             console.print(f"[red]Unexpected error: {str(e)}[/red]")
