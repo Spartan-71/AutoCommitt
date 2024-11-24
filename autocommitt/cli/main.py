@@ -190,7 +190,19 @@ def gen(
         console.print(f"[red]Commit FAILED![/green]")
 
     if push:
-        console.print("Auto push is activated!!")
+        try:
+            console.print("Pushing...")
+            subprocess.run(
+                ["git","push"],
+                check==True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            return True
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Error: Auto pushing FAILED[\red]")
+
 
 
 @app.command()
