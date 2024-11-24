@@ -198,20 +198,21 @@ def gen(
                 capture_output=True,
                 text=True,
             )
-            # Print the output in a panel
+            # Print the output 
             if result.stdout:
                 console.print(result.stdout.strip())
-                console.print(f"[green]Push successful![/green]")
-                return True
+
+            console.print(f"[green]Push successful![/green]")
+            return True
 
         except subprocess.CalledProcessError as e:
             console.print(f"[red]Error: Auto pushing FAILED.[/red]")
             console.print(f"[red]{e.stderr}[/red]")
             return False
 
-        # except FileNotFoundError:
-        #     console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
-        #     return False
+        except FileNotFoundError:
+            console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+            return False
 
         except Exception as e:
             console.print(f"[red]Unexpected error: {str(e)}[/red]")
@@ -309,6 +310,59 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     ConfigManager.save_models(models)
 
     console.print(f"[green]Successfully switched to model: {model_name}[/green]")
+
+@app.command()
+def his(
+    limit: Optional[int] = typer.Option(None, "--limit", "-n", help="Display only the latest n commit messages"),
+):
+    """Display the git commit history, optionally limiting to n recent commits."""
+    try:
+        with console.status("[blue]Fetching commit history...[/blue]"):
+            # Build the git command based on whether limit is provided
+            git_cmd = ["git", "log", "--oneline"]
+            if limit is not None:
+                git_cmd.extend([f"-n", str(limit)])
+            
+            result = subprocess.run(
+                git_cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            
+            if result.stdout:
+                # Create a title based on whether limit is used
+                title = f"Latest {limit} Commits" if limit else "Commit History"
+                console.print(Panel(
+                    result.stdout.strip(),
+                    title=title,
+                    border_style="blue"
+                ))
+                return True
+            else:
+                console.print("[yellow]No commit history found.[/yellow]")
+                return True
+
+    except subprocess.CalledProcessError as e:
+        if "fatal: your current branch does not have any commits yet" in e.stderr:
+            console.print("[yellow]No commits found in this repository yet.[/yellow]")
+        else:
+            console.print(Panel(
+                e.stderr.strip(),
+                title="Error Fetching History",
+                border_style="red"
+            ))
+        return False
+
+    except FileNotFoundError:
+        console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+        return False
+
+    except Exception as e:
+        console.print(f"[red]Unexpected error: {str(e)}[/red]")
+        return False
+              
+
 
 
 if __name__ == "__main__":
