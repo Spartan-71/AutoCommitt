@@ -15,79 +15,91 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 - **Local AI-Powered**: Generates commit messages using a small LLM models locally
 - **Flexible Editing**: Review and edit generated messages before committing
 - **Git Integration**: Seamlessly works with your existing Git workflow
-- **Resource-Efficient**: Minimal computational overhead with lightweight LLM models
 - **Multiple Language Model Support**: Option to choose different local AI models
 
+## Setup
+#### Prerequisites
 
-### Prerequisites
-
-- **Python 3.10** or higher
-- **Git** installed and configured
-- **RAM**:  
+- **RAM** (min):  
    - 8GB for smaller models (3B)  
    - 16GB for optimal performance
 - **GPU** (Optional): Boosts performance, but not required
   
-### Installation
+#### Installation
 
-> It is recommended to use virtual environment.
- 
+> It is recommended to use a virtual environment.
+
 ```bash
 pip install autocommitt
 ```
-OR
+
+#### Upgrading
+> Check the installed version with:
 ```bash
-uv pip install autocommitt
+pip list | grep autocommitt
 ```
-### Upgrading
-> If u already have autocommitt installed, then make sure to upgrade to latest version.
+
+> If it's not [latest](https://github.com/Spartan-71/AutoCommitt/releases/), make sure to upgrade.
 
 ```bash
 pip install -U autocommitt
 ```
 
-### Usage
+## Basic Usage
 
-1. Start the Ollama server:
+**1. Start the Ollama server:**
    ```bash
    autocommitt start
    ```
 
-2. Generate and edit commit message:
+**2. Stage the changes:**
+   ```bash
+   git add <files..>
+   ```
+
+**3. Generate and edit commit message:**
    ```bash
    autocommitt gen
    ```
-   This will generate a commit message based on your changes using the Llama 3.2:3B model (default). Edit it if needed.
 
-3. Press Enter to commit your changes.
-
-   **Note:** When you're done generating commit messages, be sure to stop the Ollama server by running:
+**4. Stop the Ollama server** 
    ```bash
    autocommitt stop
    ```
 
-That's it! :)
+## Additional Commands
 
-## Roadmap
+> By default, **AutoCommitt** uses the `llama3.2:3b` model to generate commit messages.
 
-- **Interactive Mode**: Enhanced CLI interface for improved user experience
-- **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
-- **Custom Templates**: Support for user-defined commit message templates
-- **Git Hooks Integration**: Compatible with pre-commit hooks
+#### 1. Using a Custom Model
 
-## Project Status
+- To view the list of available models, run the following command:
+   ```bash
+   autocommitt list
+   ```
+   > **Note**: The full list of models, along with their configurations, is stored in the `.config/autocommitt` directory.
 
-- [x] Basic commit message generation
-- [x] Local AI model integration
-- [x] Python package release
-- [x] Multi-model support
-- [ ] Interactive mode
-- [ ] Cross-platform testing
-- [ ] Custom template support
+- To select and set a model as active:
+   ```bash
+   autocommitt use <model_name>
+   ```
+   > **Note**: If the model is not already downloaded, this command will pull the model by running `ollama pull <model_name>` and set it as the default.
+
+#### 2. Deleting a Model
+
+> Since models require a significant amount of memory (minimum 2GB), it is recommended to use only one model and delete the rest to free up space.
+
+```bash
+autocommitt rm <model_name>
+```
 
 ## How It Works
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
+## Roadmap
+- **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
+- **Git Hooks Integration**: Compatible with pre-commit hooks
+- **Custom Templates**: Support for user-defined commit message templates
 
 ## Contributing
 We welcome contributions to this project! Whether you'd like to report a bug, fix an existing issue, or implement a new feature, check out the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page to get started. Be sure to review our [Contribution Guide](CONTRIBUTING.md) for detailed instructions on how to set up, test, and contribute to the project.
