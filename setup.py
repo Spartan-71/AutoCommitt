@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name="autocommitt",
-    version="v0.1.8",
+    version="v0.1.9",
     author="Anish Dabhane",
     author_email="anishdabhane@gmail.com",
     description="A CLI tool for generating editable commit messages with local AI models",
