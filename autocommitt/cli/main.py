@@ -26,7 +26,7 @@ console = Console()
 @app.command()
 def start() -> Optional[subprocess.Popen]:
     """
-    Starts ollama server in the background and ensures the default model is available.
+    Starts ollama server and ensures the default LLM model is available.
 
     Returns:
         Optional[subprocess.Popen]: Process object if server starts successfully, None otherwise
@@ -146,7 +146,7 @@ def stop():
         console.print("[green]Ollama server stopped successfully.[/green]")
 
     except FileNotFoundError:
-        console.print("[red]No running Ollama server found (PID file missing).[/red]")
+        console.print("[red]No running Ollama server found running![/red]")
     except ProcessLookupError:
         console.print(
             "[yellow]Process not found. It may have already stopped.[/yellow]"
@@ -159,7 +159,11 @@ def stop():
 def gen(
     push: bool = typer.Option(False, "--push", "-p", help="Enable auto-push"),
 ):
-    """Generate a commit msg, edit it and press ENTER to commit."""
+    """Generates a editable commit message."""
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
 
     changed_files = CommitManager.check_staged_changes()
 
@@ -222,7 +226,7 @@ def gen(
 
 @app.command()
 def list():
-    """List all available LLM models for commit message generation"""
+    """Lists all available LLM models for commit message generation"""
     ConfigManager.ensure_config()
 
     models = ConfigManager.get_models()
@@ -265,6 +269,12 @@ def list():
 @app.command()
 def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")):
     """Delete a model from available models"""
+
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
+        
     models = ConfigManager.get_models()
     config = ConfigManager.get_config()
     
@@ -288,6 +298,12 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
 @app.command()
 def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
+    
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
+
     models = ConfigManager.get_models()
     
     if model_name not in models:
