@@ -26,7 +26,7 @@ console = Console()
 @app.command()
 def start() -> Optional[subprocess.Popen]:
     """
-    Starts ollama server in the background and ensures the default model is available.
+    Starts ollama server and ensures the default LLM model is available.
 
     Returns:
         Optional[subprocess.Popen]: Process object if server starts successfully, None otherwise
@@ -146,7 +146,7 @@ def stop():
         console.print("[green]Ollama server stopped successfully.[/green]")
 
     except FileNotFoundError:
-        console.print("[red]No running Ollama server found (PID file missing).[/red]")
+        console.print("[red]No running Ollama server found running![/red]")
     except ProcessLookupError:
         console.print(
             "[yellow]Process not found. It may have already stopped.[/yellow]"
@@ -159,7 +159,11 @@ def stop():
 def gen(
     push: bool = typer.Option(False, "--push", "-p", help="Enable auto-push"),
 ):
-    """Generate a commit msg, edit it and press ENTER to commit."""
+    """Generates a editable commit message."""
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
 
     changed_files = CommitManager.check_staged_changes()
 
@@ -195,11 +199,13 @@ def gen(
             result = subprocess.run(
                 ["git", "push"],
                 check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                capture_output=True,
                 text=True,
             )
-            console.print(result.stdout)
+            # Print the output 
+            if result.stdout:
+                console.print(result.stdout.strip())
+
             console.print(f"[green]Push successful![/green]")
             return True
 
@@ -220,7 +226,7 @@ def gen(
 
 @app.command()
 def list():
-    """List all available LLM models for commit message generation"""
+    """Lists all available LLM models for commit message generation"""
     ConfigManager.ensure_config()
 
     models = ConfigManager.get_models()
@@ -263,6 +269,12 @@ def list():
 @app.command()
 def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")):
     """Delete a model from available models"""
+
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
+        
     models = ConfigManager.get_models()
     config = ConfigManager.get_config()
     
@@ -286,6 +298,12 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
 @app.command()
 def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
+    
+    if not OllamaManager.is_server_running():
+        console.print(f"[red]Error: Ollama server is not running...[/red]")
+        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        raise typer.Exit(1)
+
     models = ConfigManager.get_models()
     
     if model_name not in models:
@@ -293,21 +311,79 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
         list()
         raise typer.Exit(1)
 
+    pulled : bool = True
     if models[model_name]["downloaded"] != "yes":
-        OllamaManager.pull_model(model_name)
+        pulled = OllamaManager.pull_model(model_name)
     
-    models = ConfigManager.get_models()
-    config = ConfigManager.get_config()
-    # deactivated old model
-    models[config['model_name']]['status'] = "disabled"
+    if pulled:
+        models = ConfigManager.get_models()
+        config = ConfigManager.get_config()
+        # deactivated old model
+        models[config['model_name']]['status'] = "disabled"
 
-    models[model_name]["status"] ="active"
-    config['model_name'] = model_name
+        models[model_name]["status"] ="active"
+        config['model_name'] = model_name
 
-    ConfigManager.save_config(config)
-    ConfigManager.save_models(models)
+        ConfigManager.save_config(config)
+        ConfigManager.save_models(models)
 
-    console.print(f"[green]Successfully switched to model: {model_name}[/green]")
+        console.print(f"[green]Successfully switched to '{model_name}' model.[/green]")
+    else:
+        console.print("\n[red]Download cancelled![/red]")
+
+
+@app.command()
+def his(
+    limit: Optional[int] = typer.Option(None, "--limit", "-n", help="Display only the latest n commit messages"),
+):
+    """Display the git commit history, optionally limiting to n recent commits."""
+    try:
+        with console.status("[blue]Fetching commit history...[/blue]"):
+            # Build the git command based on whether limit is provided
+            git_cmd = ["git", "log", "--oneline"]
+            if limit is not None:
+                git_cmd.extend([f"-n", str(limit)])
+            
+            result = subprocess.run(
+                git_cmd,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            
+            if result.stdout:
+                # Create a title based on whether limit is used
+                title = f"Latest {limit} Commits" if limit else "Commit History"
+                console.print(Panel(
+                    result.stdout.strip(),
+                    title=title,
+                    border_style="blue"
+                ))
+                return True
+            else:
+                console.print("[yellow]No commit history found.[/yellow]")
+                return True
+
+    except subprocess.CalledProcessError as e:
+        if "fatal: your current branch does not have any commits yet" in e.stderr:
+            console.print("[yellow]No commits found in this repository yet.[/yellow]")
+        else:
+            console.print(Panel(
+                e.stderr.strip(),
+                title="Error Fetching History",
+                border_style="red"
+            ))
+        return False
+
+    except FileNotFoundError:
+        console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+        return False
+
+    except Exception as e:
+        console.print(f"[red]Unexpected error: {str(e)}[/red]")
+        return False
+              
+
 
 
 if __name__ == "__main__":

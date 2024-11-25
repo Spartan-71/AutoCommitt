@@ -31,26 +31,22 @@ class CommitManager:
         return output
 
     def generate_commit_message(diff_output: str, model: str = model_name) -> str:
-        # print("\n--> Generating the commit msg...\n")
-        # feat/fix/docs/style/refactor/test/chore
-        system_prompt = """You are a Git expert specializing in concise and meaningful commit messages based on git diff. Follow these commit message types strictly:
-
-                        feat: add new features, functionality, or capabilities
-                        fix: resolve bugs, issues, or error fixes
-                        docs: update documentation, README, comments
-                        style: changes that don't affect code functionality (formatting, whitespace)
-                        refactor: code improvements without adding features or fixing bugs
-                        test: add/modify tests, test coverage
-                        chore: routine tasks, maintenance, dependencies
-
-                        Format: <type>: <concise description>
-                        - Use imperative mood (e.g., "add" not "added")
-                        - Keep under 72 characters
-                        - Focus on "what" and "why", not "how"
-                        - Start with lowercase
-                        - No period at end
-
-                        Generate only one commit message, no explanations.
+        system_prompt = """You are a Git expert specializing in concise and meaningful commit messages based on output of git diff command.
+                        Choose a type from below that best describes the git diff output :
+                            fix: A bug fix,
+                            docs: Documentation only changes,
+                            style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc),
+                            refactor: A code change that neither fixes a bug nor adds a feature,
+                            perf: A code change that improves performance,
+                            test: Adding missing tests or correcting existing tests,
+                            build: Changes that affect the build system or external dependencies,
+                            ci: Changes to our CI configuration files and scripts,
+                            chore: Other changes that don't modify src or test files,
+                            revert: Reverts a previous commit',
+                            feat: A new feature,
+                        Now, generate a concise git commit message written in present tense in the format "type": "description" for the output of git diff command which is provided by the user.
+                        Exclude anything unnecessary such as translation. Your entire response will be passed directly into git commit.
+                        Generate only one commit message of maximum length 40 characters, no explanations.
                         """
 
         message = ""
@@ -58,7 +54,7 @@ class CommitManager:
             model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": diff_output},
+                {"role": "user", "content": diff_output}
             ],
             stream=True,
         )

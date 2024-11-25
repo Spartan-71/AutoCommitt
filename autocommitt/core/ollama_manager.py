@@ -1,7 +1,8 @@
-import subprocess
+import os
 import time
 import sys
-import os
+import subprocess
+from pathlib import Path
 from typing import Optional
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
@@ -14,7 +15,7 @@ class OllamaManager:
     def is_server_running() -> bool:
         """Check if Ollama server is already running"""
         try:
-            pid_path = Path(CONFIG_DIR) / "ollama_server.pid"
+            pid_path = Path(ConfigManager.CONFIG_DIR) / "ollama_server.pid"
             if pid_path.exists():
                 pid = int(pid_path.read_text().strip())
                 # Check if process exists
@@ -42,24 +43,16 @@ class OllamaManager:
 
         Args:
             model_name (str): The name of the model to check.
-            timeout (Optional[float]): Maximum time in seconds to wait for the command to complete.
-                Defaults to 30 seconds.
 
         Returns:
             bool: True if the model is present, False otherwise.
 
         Raises:
             ValueError: If model_name is empty or not a string.
-            TimeoutExpired: If the command execution exceeds the timeout.
         """
-        # # Input validation
-        # if not isinstance(model_name, str):
-        #     raise ValueError("model_name must be a string")
+
         if not model_name.strip():
             raise ValueError("model_name cannot be empty")
-
-        # # Configure logging
-        # logger = logging.getLogger(__name__)
 
         try:
             # Run the ollama list command with timeout
@@ -89,7 +82,6 @@ class OllamaManager:
                 if model_line.split()[0].strip() == model_name:
                     return True
 
-            # logger.debug(f"Model '{model_name}' not found in ollama list")
             return False
 
         except subprocess.TimeoutExpired as e:
@@ -108,14 +100,14 @@ class OllamaManager:
             )
             return False
 
-    def pull_model(model_name: str, timeout: float = 5.00) -> bool:
+    def pull_model(model_name: str, timeout: float = 600.00) -> bool:
         """
         Pulls an Ollama model if it's not already present.
 
         Args:
             model_name (str): The name of the model to pull
             timeout (Optional[float]): Maximum time in seconds to wait for the pull.
-                Defaults to 600 seconds (10 minutes)
+                Defaults to 5 seconds
 
         Returns:
             bool: True if model is available (pulled successfully or already present),
@@ -132,64 +124,47 @@ class OllamaManager:
 
             # Model needs to be pulled
             console.print(f"[yellow]Pulling {model_name}...[/yellow]")
-
-            # Create progress display
+            console.print("[blue]NOTE: The download time varies based on your internet speed and the model size.\nIf the download doesn't complete within 10 minutes, please try running the command again.[/blue]")
+            # Create a simple spinner with elapsed time
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 TimeElapsedColumn(),
                 console=console,
             ) as progress:
-                # Add a progress task
                 task = progress.add_task(f"Downloading {model_name}...", total=None)
+                
+                try:
+                    # Run the pull command with timeout
+                    result = subprocess.run(
+                        ["ollama", "pull", model_name],
+                        capture_output=True,
+                        text=True,
+                        timeout=timeout
+                    )
+                    
+                    if result.returncode == 0:
+                        # Update the table
+                        models = ConfigManager.get_models()
+                        models[model_name]["downloaded"] = "yes"
+                        ConfigManager.save_models(models)
 
-                # Start the pull process
-                process = subprocess.Popen(
-                    ["ollama", "pull", model_name],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    bufsize=1,
-                    universal_newlines=True,
-                )
-
-                start_time = time.time()
-
-                # Monitor the pull process
-                while True:
-
-                    elapsed_time = time.time() - start_time
-                    if elapsed_time > timeout:
-                        process.kill()
-                        process.communicate()  # Ensure buffers are cleared
-                        console.print(
-                            f"[red]Error: Pull operation timed out after {timeout} seconds[/red]"
-                        )
+                        console.print(f"[green]Successfully pulled {model_name}![/green]")
+                        return True
+                    else:
+                        error_message = result.stderr if result.stderr else "Unknown error"
+                        console.print(f"[red]Error pulling model: {error_message.strip()}[/red]")
                         return False
 
-                    # Read output line by line without blocking
-                    if process.stdout:
-                        output = process.stdout.readline()
-                        if output:
-                            progress.update(task, description=output.strip())
-                            progress.update(task, description=output.strip())
-
-
-                    time.sleep(0.1)
-
-                # Check if pull was successful
-                process.communicate()  # Ensure no leftover output is blocking
-                if process.returncode == 0:
-                    # Update the table
-                    models = ConfigManager.get_models()
-                    models[model_name]["downloaded"] = "yes"
-                    ConfigManager.save_models(models)
-
-                    console.print(f"[green]Successfully pulled {model_name}![/green]")
-                    return True
-                else:
-                    error = process.stderr.read() if process.stderr else "Unknown error"
-                    console.print(f"[red]Error pulling model: {error.strip()}[/red]")
+                except subprocess.TimeoutExpired as e:
+                    # Clean up the process when timeout occurs
+                    if hasattr(e, 'process'):
+                        e.process.kill()
+                    console.print(f"[red]Error: Pull operation timed out after {timeout} seconds[/red]")
+                    return False
+                    
+                except KeyboardInterrupt:
+                    # console.print("\n[yellow]Download cancelled by user[/yellow]")
                     return False
 
         except FileNotFoundError:
@@ -197,11 +172,10 @@ class OllamaManager:
                 "[red]Error: ollama command not found. Please ensure Ollama is installed and in PATH[/red]"
             )
             return False
-
         except Exception as e:
             console.print(f"[red]Unexpected error while pulling model: {str(e)}[/red]")
             return False
-
+            
     def delete_model(model_name: str) -> bool:
         """
         Deletes an Ollama model if it's already present.
@@ -216,7 +190,7 @@ class OllamaManager:
 
         try:
             # Delete the model
-            console.print(f"[yellow]Deleting {model_name}...[/yellow]")
+            # console.print(f"[yellow]Deleting {model_name}...[/yellow]")
             result = subprocess.run(
                 ["ollama", "rm", model_name],
                 stdout=subprocess.PIPE,
@@ -242,23 +216,3 @@ class OllamaManager:
         except Exception as e:
             console.print(f"[red]Unexpected error while deleting model: {str(e)}[/red]")
             return False
-
-
-
-    # def main():
-    #     """Main function to demonstrate model pulling functionality."""
-    #     console = Console()
-    #     model_name = "llama3.2:3b"
-
-    #     # Pull the model
-    #     success = pull_model(model_name)
-
-    #     if success:
-    #         console.print(f"[green]Model {model_name} is ready to use![/green]")
-    #     else:
-    #         console.print(f"[red]Failed to ensure model {model_name} is available.[/red]")
-    #         sys.exit(1)
-
-
-# if __name__ == "__main__":
-#     main()

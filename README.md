@@ -45,27 +45,44 @@ If it's not [latest](https://github.com/Spartan-71/AutoCommitt/releases/), make 
 pip install -U autocommitt
 ```
 
+
 ## Basic Usage
 
-**1. Start the Ollama server:**
+1. **Start the Ollama Server**  
+Launch the Ollama server to activate model-based commit message generation.
    ```bash
    autocommitt start
    ```
 
-**2. Stage the changes:**
+2. **Stage Your Changes**  
+   Stage the files you want to commit using Git:  
    ```bash
-   git add <files..>
+   git add <files...>
    ```
 
-**3. Generate and edit commit message:**
+3. **Generate and Edit Commit Messages**  
+   Generate a commit message based on your staged changes:  
    ```bash
    autocommitt gen
-   ```
+   ```  
 
-**4. Stop the Ollama server** 
+   - The tool generates a message and allows you to review and edit it before committing.  
+
+   - To **automatically push** the commit to the remote repository, use the `-p` or `--push` flag:  
+     ```bash
+     autocommitt gen -p
+     ```  
+
+   > **Pro Tip**: Save time by using the `--push` flag to combine committing and pushing into a single step.
+
+4. **Stop the Ollama Server**  
+   Once you're done, stop the Ollama server to free up resources:  
    ```bash
    autocommitt stop
    ```
+
+>**Note**: You can use the `ac` alias for `autocommitt` throughout, making commands shorter and quicker to type!
+
 
 ## Additional Commands
 
@@ -92,6 +109,17 @@ autocommitt rm <model_name>
 
 
 
+#### 3. Viewing Commit History
+
+Easily view recent commit messages using the `his` command:
+
+```bash
+autocommitt his -n 5
+```
+- **Flag Description**:`-n` or `--limit`: (Optional) Specify the number of recent commit messages to retrieve. If omitted, all commit messages will be displayed.
+
+> **Pro Tip**: Use this command to quickly review your project's recent changes before generating new commit messages.
+
 ## How It Works
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
@@ -101,18 +129,19 @@ It runs the `git diff --staged` command to gather all staged changes and process
 - **Custom Templates**: Support for user-defined commit message templates
 
 ## Contributing
-We welcome contributions to this project! Whether you'd like to report a bug, fix an existing issue, or implement a new feature, check out the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page to get started. Be sure to review our [Contribution Guide](CONTRIBUTING.md) for detailed instructions on how to set up, test, and contribute to the project.
 
-For discussions, questions, or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im) Your contributions and ideas are greatly appreciated!
+We welcome contributions! To report bugs, fix issues, or add features, visit the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page. Please review our [Contribution Guide](CONTRIBUTING.md) for setup and contribution instructions.
+
+For discussions or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im). Your contributions are appreciated!
 
 ## Acknowledgments
 
 We would like to express our gratitude to the following open-source projects that made AutoCommitt possible:
 
-- [Ollama](https://ollama.ai/) - An impressive project that makes running large language models locally both possible and practical. Their API and model management system are integral to AutoCommitt's local AI capabilities.
-- [Typer](https://typer.tiangolo.com/) - Created by [Sebastián Ramírez](https://github.com/tiangolo), the same author of FastAPI. Typer provides an elegant CLI builder that forms the backbone of our command-line interface.
 
+- [Ollama](https://ollama.ai/) - Enables local AI with large language models.
+- [Typer](https://typer.tiangolo.com/) - A CLI builder by [Sebastián Ramírez](https://github.com/tiangolo), powering our command-line interface.
 
-Special thanks to the maintainers and contributors of these projects for their fantastic work in making developer tools more accessible and powerful.
+Special thanks to the maintainers and contributors for their outstanding work!
 
 ---
