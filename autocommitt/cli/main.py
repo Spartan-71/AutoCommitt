@@ -311,21 +311,26 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
         list()
         raise typer.Exit(1)
 
+    pulled : bool = True
     if models[model_name]["downloaded"] != "yes":
-        OllamaManager.pull_model(model_name)
+        pulled = OllamaManager.pull_model(model_name)
     
-    models = ConfigManager.get_models()
-    config = ConfigManager.get_config()
-    # deactivated old model
-    models[config['model_name']]['status'] = "disabled"
+    if pulled:
+        models = ConfigManager.get_models()
+        config = ConfigManager.get_config()
+        # deactivated old model
+        models[config['model_name']]['status'] = "disabled"
 
-    models[model_name]["status"] ="active"
-    config['model_name'] = model_name
+        models[model_name]["status"] ="active"
+        config['model_name'] = model_name
 
-    ConfigManager.save_config(config)
-    ConfigManager.save_models(models)
+        ConfigManager.save_config(config)
+        ConfigManager.save_models(models)
 
-    console.print(f"[green]Successfully switched to model: {model_name}[/green]")
+        console.print(f"[green]Successfully switched to '{model_name}' model.[/green]")
+    else:
+        console.print("\n[red]Download cancelled![/red]")
+
 
 @app.command()
 def his(
