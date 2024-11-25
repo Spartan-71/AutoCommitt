@@ -243,23 +243,3 @@ class OllamaManager:
         except Exception as e:
             console.print(f"[red]Unexpected error while deleting model: {str(e)}[/red]")
             return False
-
-
-
-    # def main():
-    #     """Main function to demonstrate model pulling functionality."""
-    #     console = Console()
-    #     model_name = "llama3.2:3b"
-
-    #     # Pull the model
-    #     success = pull_model(model_name)
-
-    #     if success:
-    #         console.print(f"[green]Model {model_name} is ready to use![/green]")
-    #     else:
-    #         console.print(f"[red]Failed to ensure model {model_name} is available.[/red]")
-    #         sys.exit(1)
-
-
-# if __name__ == "__main__":
-#     main()
