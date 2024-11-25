@@ -1,7 +1,8 @@
-import subprocess
+import os
 import time
 import sys
-import os
+import subprocess
+from pathlib import Path
 from typing import Optional
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
@@ -14,7 +15,7 @@ class OllamaManager:
     def is_server_running() -> bool:
         """Check if Ollama server is already running"""
         try:
-            pid_path = Path(CONFIG_DIR) / "ollama_server.pid"
+            pid_path = Path(ConfigManager.CONFIG_DIR) / "ollama_server.pid"
             if pid_path.exists():
                 pid = int(pid_path.read_text().strip())
                 # Check if process exists
