@@ -21,7 +21,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 ### Prerequisites
 
 - **RAM** (minimum):  
-   - 8GB for smaller models (3B)  
+   - 8GB for smaller models (<=3B parameters)  
    - 16GB for optimal performance
 - **GPU** (Optional): Boosts performance, but not required
   
@@ -96,7 +96,7 @@ autocommitt rm <model_name>
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
 ## Future Enhancements
-- **Cross-Platform Support**: Enhanced compatibility for Windows and macOS.
+- **Cross-Platform Support**: Compatibility for Windows.
 - **Git Hooks Integration**: Compatible with pre-commit hooks
 - **Custom Templates**: Support for user-defined commit message templates
 
