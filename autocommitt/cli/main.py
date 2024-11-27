@@ -13,20 +13,9 @@ from typing import Optional, Dict
 from autocommitt.core.commit_manager import CommitManager
 from autocommitt.core.ollama_manager import OllamaManager
 from autocommitt.utils.config_manager import ConfigManager
-# from autocommitt.utils.check_installation import is_ollama_installed, download_and_install_ollama
 
 app = typer.Typer()
 console = Console()
-
-# def initialize_autocommit():
-#     if not is_ollama_installed():
-#         console.print(f"[blue]Ollama is not installed. Installing now...[/blue]")
-#         download_and_install_ollama()
-#     else:
-#         console.print(f"[green]Ollama is already installed and ready to use.[/green]")
-
-# # Call the function when initializing
-# initialize_autocommit()
 
 @app.command()
 def start() -> Optional[subprocess.Popen]:
@@ -51,7 +40,7 @@ def start() -> Optional[subprocess.Popen]:
     try:
         # First check if server is already running
         if OllamaManager.check_server_health():
-            console.print("[yellow]Ollama server is already running![/yellow]")
+            console.print("[yellow]Warning: Ollama server is already running![/yellow]")
             return None
 
         # Start the server
@@ -73,26 +62,13 @@ def start() -> Optional[subprocess.Popen]:
 
         console.print("[green]Ollama server started successfully![/green]")
 
-        # Check server health
-        # max_retries = 3
-        # retry_count = 0
-        # while retry_count < max_retries:
-        #     if ollama_cmd.check_server_health():
-        #         break
-        #     time.sleep(2)
-        #     retry_count += 1
-
-        # if retry_count == max_retries:
-        #     console.print("[red]Warning: Server started but may not be responding correctly[/red]")
-        #     return None
-
         # Check and pull default model
         model_name = "llama3.2:3b"  # Make sure this matches your default model name
-        console.print(f"[blue]Checking for default model {model_name}...[/blue]")
+        # console.print(f"[blue]Checking for default model {model_name}...[/blue]")
 
         if not OllamaManager.is_model_present(model_name):
             console.print(
-                f"[yellow]Default model {model_name} not found. Pulling...[/yellow]"
+                f"[yellow]Default model {model_name} not found.[/yellow]"
             )
             if not OllamaManager.pull_model(model_name):
                 console.print(
@@ -169,14 +145,14 @@ def gen(
 ):
     """Generates a editable commit message."""
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
 
     changed_files = CommitManager.check_staged_changes()
 
     if not changed_files:
-        console.print("[yellow]No stagged changes to commit[/yellow]")
+        console.print("[yellow]Warning: No stagged changes to commit[/yellow]")
         raise typer.Exit(1)
 
     # Get selected model
@@ -218,7 +194,7 @@ def gen(
             return True
 
         except subprocess.CalledProcessError as e:
-            console.print(f"[red]Error: Auto pushing FAILED.[/red]")
+            console.print(f"[red]Error: Auto pushing FAILED![/red]")
             console.print(f"[red]{e.stderr}[/red]")
             return False
 
@@ -279,8 +255,8 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
     """Delete a model from available models"""
 
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
         
     models = ConfigManager.get_models()
@@ -308,8 +284,8 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
     
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
 
     models = ConfigManager.get_models()
@@ -392,8 +368,5 @@ def his(
         console.print(f"[red]Unexpected error: {str(e)}[/red]")
         return False
               
-
-
-
 if __name__ == "__main__":
     app()
