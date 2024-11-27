@@ -128,7 +128,6 @@ class OllamaManager:
             bool: True if model is available (pulled successfully or already present),
                 False if pull failed
         """
-        console = Console()
 
         try:
             # Check if model is already pulled
@@ -181,7 +180,7 @@ class OllamaManager:
                     return False
                     
                 except KeyboardInterrupt:
-                    # console.print("\n[yellow]Download cancelled by user[/yellow]")
+                    console.print("\n[yellow]Download cancelled![/yellow]")
                     return False
 
         except FileNotFoundError:
