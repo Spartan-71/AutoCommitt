@@ -1,8 +1,14 @@
 from setuptools import setup, find_packages
+from autocommitt.utils.check_installation import is_ollama_installed, download_and_install_ollama
 
 # Read the contents of your README file
 with open('README.md', 'r', encoding='utf-8') as f:
     long_des = f.read()
+    
+if not is_ollama_installed():
+    print("Ollama is not installed. Installing as part of the setup...")
+    download_and_install_ollama()
+
 
 setup(
     name="autocommitt",
