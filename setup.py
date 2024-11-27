@@ -5,17 +5,12 @@ from autocommitt.utils.check_installation import is_ollama_installed, download_a
 with open('README.md', 'r', encoding='utf-8') as f:
     long_des = f.read()
     
-if not is_ollama_installed():
-    print("Ollama is not installed. Installing as part of the setup...")
-    download_and_install_ollama()
-
-
 setup(
     name="autocommitt",
-    version="v0.1.9",
+    version="v0.1.10",
     author="Anish Dabhane",
     author_email="anishdabhane@gmail.com",
-    description="A CLI tool for generating editable commit messages with local AI models",
+    description="A CLI tool for generating editable commit messages locally using Ollama.",
     long_description=long_des,
     long_description_content_type='text/markdown',
     packages=find_packages(),
@@ -23,7 +18,6 @@ setup(
     keywords=[
         "autocommit",
         "aicommit",
-        "git diff",
         "git automation",
         "CLI tool",
         "local AI",
@@ -39,5 +33,5 @@ setup(
     },
     url="https://github.com/Spartan-71/autocommitt",  # Update with your actual URL
     license="Apache-2.0",  # Specify your license type
-    python_requires='>=3.8',  # Specify the minimum Python version required
+    python_requires='>=3.10',  # Specify the minimum Python version required
 )
