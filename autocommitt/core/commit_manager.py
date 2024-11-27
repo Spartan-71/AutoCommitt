@@ -35,7 +35,7 @@ class CommitManager:
         except subprocess.CalledProcessError as e:
             return None, e.stderr
 
-    @classmethod
+    @staticmethod
     def check_staged_changes() -> Optional[str]:
         """
         Check for staged Git changes.
@@ -50,7 +50,7 @@ class CommitManager:
             return None
 
         if not output:
-            print("Warning: No changes staged!!")
+            # print("Warning: No changes staged!!")
             return None
 
         return output
@@ -163,14 +163,14 @@ class CommitManager:
             print(f"Commit failed: {e.stderr}")
             return False
     
-    @classmethod
+    @staticmethod
     def generate(cls):
         """
         Orchestrate the entire commit generation process.
         Checks staged changes, generates and edits commit message, then commits.
         """
-        diff_output = cls.check_staged_changes()
+        diff_output = check_staged_changes()
         if diff_output:
-            initial_message =cls. generate_commit_message(diff_output)
-            final_message = cls.edit_commit_message(initial_message)
-            cls.perform_git_commit(final_message)
+            initial_message = generate_commit_message(diff_output)
+            final_message = edit_commit_message(initial_message)
+            perform_git_commit(final_message)
