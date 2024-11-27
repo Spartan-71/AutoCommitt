@@ -51,3 +51,10 @@ def download_and_install_ollama():
         # Add Windows-specific installation steps if necessary
         print(f"Move '{filename}' to a directory in your PATH to use it globally.")
     print("Ollama installation complete.")
+
+
+# if __name__ == "__main__":
+#     if not is_ollama_installed():
+#         download_and_install_ollama()
+#     else:
+#         print("ollama is installed already")
