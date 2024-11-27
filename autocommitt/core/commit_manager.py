@@ -160,7 +160,7 @@ class CommitManager:
             )
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Commit failed: {e.stderr}")
+            # print(f"Commit failed: {e.stderr}")
             return False
     
     @staticmethod
