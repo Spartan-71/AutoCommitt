@@ -1,15 +1,10 @@
-# cli.py
 import os
 import time
-import json
 import typer
 import signal
 import subprocess
-from rich import box
-from enum import Enum
 from pathlib import Path
 from rich.text import Text
-from rich.theme import Theme
 from rich.table import Table
 from rich.panel import Panel
 from rich.console import Console
@@ -18,10 +13,20 @@ from typing import Optional, Dict
 from autocommitt.core.commit_manager import CommitManager
 from autocommitt.core.ollama_manager import OllamaManager
 from autocommitt.utils.config_manager import ConfigManager
+# from autocommitt.utils.check_installation import is_ollama_installed, download_and_install_ollama
 
 app = typer.Typer()
 console = Console()
 
+# def initialize_autocommit():
+#     if not is_ollama_installed():
+#         console.print(f"[blue]Ollama is not installed. Installing now...[/blue]")
+#         download_and_install_ollama()
+#     else:
+#         console.print(f"[green]Ollama is already installed and ready to use.[/green]")
+
+# # Call the function when initializing
+# initialize_autocommit()
 
 @app.command()
 def start() -> Optional[subprocess.Popen]:
@@ -56,6 +61,7 @@ def start() -> Optional[subprocess.Popen]:
             stderr=subprocess.DEVNULL,
             start_new_session=True,
             creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
+            shell=os.name == "nt"
         )
 
         # Wait a bit for server to initialize
@@ -113,7 +119,6 @@ def start() -> Optional[subprocess.Popen]:
 @app.command()
 def stop():
     """Stops the running ollama server."""
-
     BANNER = """
     ╭────────────────── AutoCommitt ──────────────────╮
     │          Local AI Models Are Resting 😴         │
@@ -124,33 +129,36 @@ def stop():
     config = ConfigManager.get_config()
 
     try:
+        pid_file_path = Path(ConfigManager.CONFIG_DIR) / "ollama_server.pid"
+        
         # Read the PID from the file
-        with open(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid", "r") as pid_file:
+        with open(pid_file_path, "r") as pid_file:
             pid = int(pid_file.read().strip())
 
-        # Send the SIGTERM signal to terminate the process
-        os.kill(pid, signal.SIGTERM)
+        # Windows-specific process termination
+        if os.name == "nt":
+            subprocess.run(f"taskkill /F /PID {pid}", shell=True, check=True)
+        else:
+            os.kill(pid, signal.SIGTERM)
 
-        # update the table
+        # Update model status
         active_model = config["model_name"]
         models[active_model]["status"] = "disabled"
 
         ConfigManager.save_config(config)
         ConfigManager.save_models(models)
 
-        # Delete the config and PID file
+        # Remove PID and config files
+        os.remove(pid_file_path)
         os.remove(ConfigManager.CONFIG_FILE)
-        os.remove(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid")
 
         console.print(Text(BANNER, justify="center"))
         console.print("[green]Ollama server stopped successfully.[/green]")
 
     except FileNotFoundError:
-        console.print("[red]No running Ollama server found running![/red]")
-    except ProcessLookupError:
-        console.print(
-            "[yellow]Process not found. It may have already stopped.[/yellow]"
-        )
+        console.print("[red]No running Ollama server found![/red]")
+    except (subprocess.CalledProcessError, ProcessLookupError):
+        console.print("[yellow]Process not found or already stopped.[/yellow]")
     except Exception as e:
         console.print(f"[red]Failed to stop Ollama server: {e}[/red]")
 
@@ -349,6 +357,7 @@ def his(
                 check=True,
                 capture_output=True,
                 text=True,
+                creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
             )
             
             if result.stdout:
