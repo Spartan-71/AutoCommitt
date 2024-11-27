@@ -19,7 +19,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 ## Setup
 ### Prerequisites
-
+- **Ollama**: Download and install from [offical website](https://ollama.com/download).
 - **RAM** (minimum):  
    - 8GB for smaller models (<=3B parameters)  
    - 16GB for optimal performance
