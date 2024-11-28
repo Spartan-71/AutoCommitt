@@ -137,7 +137,7 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-              echo "## Public Beta Release 🚀" > release-notes.md
+              echo "## Public Beta Release" > release-notes.md
               echo "" >> release-notes.md
               echo "We’re excited to announce the release of **AutoCommit v0.1.10**! 🎉 This version marks a significant milestone as it brings compatibility with both **Windows** and **Linux**, making the tool accessible to a wider range of developers." >> release-notes.md
               echo "" >> release-notes.md
