@@ -2,6 +2,7 @@ import os
 import time
 import typer
 import signal
+import platform
 import subprocess
 from pathlib import Path
 from rich.text import Text
@@ -18,7 +19,7 @@ app = typer.Typer()
 console = Console()
 
 @app.command()
-def start() -> Optional[subprocess.Popen]:
+def start():
     """
     Starts ollama server and ensures the default LLM model is available.
 
@@ -31,66 +32,39 @@ def start() -> Optional[subprocess.Popen]:
     │         Generated Locally, Commit Globally       │
     ╰──────────────────────────────────────────────────╯
     """
-    console = Console()
     console.print(Text(BANNER, justify="center"))
 
     # Ensure configuration is set up
     ConfigManager.ensure_config()
 
-    try:
-        # First check if server is already running
-        if OllamaManager.check_server_health():
-            console.print("[yellow]Warning: Ollama server is already running![/yellow]")
+    # First check if server is already running
+    if not OllamaManager.is_server_running():
+    
+        started : bool = OllamaManager.start_ollama_service()
+        
+        if started:
+            time.sleep(3)
+            console.print("[green]Ollama server started successfully![/green]")
+        else:
             return None
 
-        # Start the server
-        process = subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-            creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
-            shell=os.name == "nt"
-        )
+    else:
+        console.print("[yellow]Warning: Ollama server is already running![/yellow]")
 
-        # Wait a bit for server to initialize
+    # Check and pull default model
+    model_name = "llama3.2:3b"
+
+    # console.print(f"[blue]Checking for default model {model_name}...[/blue]")
+    if not OllamaManager.is_model_present(model_name):
+        console.print(f"[yellow]Default model {model_name} not found.[/yellow]")
+
         time.sleep(1)
-
-        # Save PID
-        with open(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid", "w") as pid_file:
-            pid_file.write(str(process.pid))
-
-        console.print("[green]Ollama server started successfully![/green]")
-
-        # Check and pull default model
-        model_name = "llama3.2:3b"  # Make sure this matches your default model name
-        # console.print(f"[blue]Checking for default model {model_name}...[/blue]")
-
-        if not OllamaManager.is_model_present(model_name):
-            console.print(
-                f"[yellow]Default model {model_name} not found.[/yellow]"
-            )
-            if not OllamaManager.pull_model(model_name):
-                console.print(
-                    "[red]Failed to pull default model. Please check your internet connection[/red]"
-                )
-                return process
-        else:
-            console.print(f"[green]Default model {model_name} is ready![/green]")
-
-        return process
-
-    except FileNotFoundError:
-        console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
-        console.print(
-            "[yellow]Please install Ollama following the instructions at: https://ollama.ai[/yellow]"
-        )
-        return None
-
-    except Exception as e:
-        console.print(f"[red]Failed to start Ollama server: {str(e)}[/red]")
-        return None
-
+        if not OllamaManager.pull_model(model_name):
+            console.print(f"[red]Failed to pull default model. Please check your internet connection[/red]")
+            return None
+    else:
+        console.print(f"[green]Default model {model_name} is ready![/green]")
+    return None
 
 @app.command()
 def stop():
@@ -104,39 +78,24 @@ def stop():
     models = ConfigManager.get_models()
     config = ConfigManager.get_config()
 
-    try:
-        pid_file_path = Path(ConfigManager.CONFIG_DIR) / "ollama_server.pid"
-        
-        # Read the PID from the file
-        with open(pid_file_path, "r") as pid_file:
-            pid = int(pid_file.read().strip())
+    if OllamaManager.is_server_running():
+        stopped : bool=OllamaManager.stop_ollama_service()
+        if stopped:
+            # Update model status
+            active_model = config["model_name"]
+            models[active_model]["status"] = "disabled"
 
-        # Windows-specific process termination
-        if os.name == "nt":
-            subprocess.run(f"taskkill /F /PID {pid}", shell=True, check=True)
-        else:
-            os.kill(pid, signal.SIGTERM)
+            ConfigManager.save_config(config)
+            ConfigManager.save_models(models)
 
-        # Update model status
-        active_model = config["model_name"]
-        models[active_model]["status"] = "disabled"
+            # Remove config files
+            os.remove(ConfigManager.CONFIG_FILE)
 
-        ConfigManager.save_config(config)
-        ConfigManager.save_models(models)
+            console.print(Text(BANNER, justify="center"))
+            console.print("[green]Ollama server stopped successfully.[/green]")
 
-        # Remove PID and config files
-        os.remove(pid_file_path)
-        os.remove(ConfigManager.CONFIG_FILE)
-
-        console.print(Text(BANNER, justify="center"))
-        console.print("[green]Ollama server stopped successfully.[/green]")
-
-    except FileNotFoundError:
-        console.print("[red]No running Ollama server found![/red]")
-    except (subprocess.CalledProcessError, ProcessLookupError):
-        console.print("[yellow]Process not found or already stopped.[/yellow]")
-    except Exception as e:
-        console.print(f"[red]Failed to stop Ollama server: {e}[/red]")
+    else:
+        console.print(f"[yellow]Warning: No Ollama server running found![/yellow]")
 
 
 @app.command()
@@ -269,8 +228,8 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
     
     # Check if it's a default model
     if models[model_name].get('status')=="active":
-        console.print(f"[red]Error: Cannot remove currently selected model[/red]")
-        console.print("Please switch to another model first using 'use' command")
+        console.print(f"[red]Error: Cannot remove currently active model![/red]")
+        console.print("Please switch to a different model first using the 'use' command.")
         raise typer.Exit(1)
 
     if models[model_name].get("downloaded")=="no":
