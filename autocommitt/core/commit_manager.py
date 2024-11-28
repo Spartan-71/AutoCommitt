@@ -113,7 +113,7 @@ class CommitManager:
             str: Final commit message after potential user edits.
         """
         try:
-            import gnureadline as readline  # Optional readline support
+            import readline  # Optional readline support
         except ImportError:
             try:
                 import pyreadline3 as readline
