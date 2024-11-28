@@ -44,7 +44,7 @@ setup(
     entry_points={
         "console_scripts": [
             "autocommitt = autocommitt.cli.main:app",
-            "ac = autocommitt.cli.main:app"
+            "act = autocommitt.cli.main:app"
         ]
     },
     url="https://github.com/Spartan-71/autocommitt",  # Update with your actual URL
