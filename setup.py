@@ -9,9 +9,8 @@ with open('README.md', 'r', encoding='utf-8') as f:
 platform_specific_requires = []
 if sys.platform == "win32":
     platform_specific_requires.append("pyreadline3")
-    platform_specific_requires.append("psutil")
-elif sys.platform == "darwin" or sys.platform.startswith("linux"):
-    platform_specific_requires.append("readline")
+# elif sys.platform == "darwin" or sys.platform.startswith("linux"):
+#     platform_specific_requires.append("readline")
 
 setup(
     name="autocommitt",
@@ -27,6 +26,7 @@ setup(
         "typer",
         "requests",
         "platformdirs",
+        "psutil",
     ] + platform_specific_requires,
     keywords=[
         "autocommit",
