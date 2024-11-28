@@ -1,6 +1,8 @@
 import os
-import time
 import sys
+import time
+import platform
+import requests
 import subprocess
 from pathlib import Path
 from typing import Optional,Dict
@@ -12,51 +14,107 @@ from autocommitt.utils.config_manager import ConfigManager
 console = Console()
 
 class OllamaManager:
-    
+
     @staticmethod
     def is_server_running() -> bool:
-        """Check if Ollama server is already running"""
+        """Checks if the Ollama server is running at the given URL."""
+        url: str = "http://localhost:11434"
         try:
-            pid_path = Path(ConfigManager.CONFIG_DIR) / "ollama_server.pid"
-            if pid_path.exists():
-                pid = int(pid_path.read_text().strip())
-                if os.name == "nt":  # Windows
-                    import ctypes
-                    kernel32 = ctypes.windll.kernel32
-                    try:
-                        # Try to open the process with minimal rights
-                        handle = kernel32.OpenProcess(0x0400, False, pid)
-                        if handle:
-                            kernel32.CloseHandle(handle)
-                            return True
-                        return False
-                    except Exception:
-                        return False
-                else:  # Unix-like systems
-                    os.kill(pid, 0)  # This will raise an error if process doesn't exist
-                    return True
-        except (FileNotFoundError, ValueError, ProcessLookupError, PermissionError):
+            response = requests.get(url, timeout=3)  # Adding a timeout to prevent indefinite hanging
+            if response.status_code == 200:
+                # console.print("[green]Ollama server is running.[/green]")
+                return True
+            else:
+                # console.print(f"[yellow]Ollama server is not running. Status code: {response.status_code}[/yellow]")
+                return False
+        except requests.ConnectionError:
+            # console.print("[red]Ollama server is not reachable. Connection error.[/red]")
             return False
-        return False
+        except requests.Timeout:
+            # console.print("[red]Ollama server request timed out.[/red]")
+            return False
+        except requests.RequestException as e:
+            # console.print(f"[red]Unexpected error while checking server: {str(e)}[/red]")
+            return False
+
 
     @staticmethod
-    def check_server_health() -> bool:
-        """Check if the Ollama server is responding"""
+    def start_ollama_service() -> bool:
+        """Starts the Ollama service based on the operating system."""
+        os_type = platform.system()
 
         try:
-            result = subprocess.run(
-                ["ollama", "list"],
-                capture_output=True,
-                timeout=3,
-                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-                text=True
-                )
+            if os_type == "Linux":
+                # For Linux, use systemd to start the service
+                result = subprocess.run(["sudo", "systemctl", "start", "ollama.service"], check=True)
+                return result.returncode == 0
+
+            elif os_type == "Darwin":
+                # For macOS, run Ollama in the background using subprocess
+                process = subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                return process is not None and process.poll() is None
+
+            elif os_type == "Windows":
+                # For Windows, run Ollama in the background using subprocess
+                process = subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                return process is not None and process.poll() is None
+
+            else:
+                console.print("[red]Unsupported operating system. Ollama service could not be started.[/red]")
+                return False
+
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Failed to start Ollama service: {e}[/red]")
+            return False
+
+        except FileNotFoundError:
+            console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
+            console.print("Please install Ollama following the instructions at: [cyan]https://ollama.ai/download[/cyan]")
+            return False
+
+        except Exception as e:
+            console.print(f"[red]An unexpected error occurred: {str(e)}[/red]")
+            return False
+
+    @staticmethod
+    def stop_ollama_service() -> bool:
+        """Stops the Ollama service based on the current operating system."""
+        os_type = platform.system()
+
+        try:
+            if os_type == "Linux":
+                # For Linux, use systemd to stop the service
+                subprocess.run(["sudo", "systemctl", "stop", "ollama.service"], check=True, timeout=3)
+                return True
             
-            models = ConfigManager.get_models()
-            models["llama3.2:3b"]["downloaded"] = "yes"
-            ConfigManager.save_models(models)
-            return result.returncode == 0
-        except Exception:
+            elif os_type == "Darwin":
+                # For macOS, find and kill the process
+                result = subprocess.run(["pkill", "-f", "ollama"], check=True, timeout=3)
+                return result.returncode == 0
+            
+            elif os_type == "Windows":
+                # For Windows, find and terminate the process
+                result = subprocess.run(["taskkill", "/F", "/IM", "ollama.exe"], check=True, timeout=3)
+                return result.returncode == 0
+            
+            else:
+                console.print("[red]Unsupported operating system. Cannot stop Ollama service.[/red]")
+                return False
+
+        except subprocess.CalledProcessError as e:
+            console.print(f"[red]Failed to stop Ollama service: {e}[/red]")
+            return False
+
+        except FileNotFoundError:
+            console.print("[yellow]No running Ollama server found or command not found![/yellow]")
+            return False
+
+        except subprocess.TimeoutExpired:
+            console.print("[red]Stopping Ollama service timed out.[/red]")
+            return False
+
+        except Exception as e:
+            console.print(f"[red]An unexpected error occurred: {str(e)}[/red]")
             return False
 
     @staticmethod
@@ -138,7 +196,8 @@ class OllamaManager:
 
             # Model needs to be pulled
             console.print(f"[yellow]Pulling {model_name}...[/yellow]")
-            console.print("[blue]NOTE: The download time varies based on your internet speed and the model size.\nIf the download doesn't complete within 10 minutes, please try running the command again.[/blue]")
+            console.print("NOTE: The download time varies based on your internet speed and the model size.\nIf the download doesn't complete within 10 minutes, please try running the command again.")
+            time.sleep(1)
             
             # Create a simple spinner with elapsed time
             with Progress(
