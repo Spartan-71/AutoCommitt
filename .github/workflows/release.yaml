@@ -137,21 +137,23 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-              echo "## What's New in This Release (v0.1.9)" > release-notes.md
+              echo "## Public Beta Release 🚀" > release-notes.md
               echo "" >> release-notes.md
-              echo "#### New Features" >> release-notes.md
-              echo "- `his`: Retrieves the history of commit messages" >> release-notes.md
-              echo "- `auto-push`: Automatically pushes commits with \`ac gen -p --push\`" >> release-notes.md
+              echo "We’re excited to announce the release of **AutoCommit v0.1.10**! 🎉 This version marks a significant milestone as it brings compatibility with both **Windows** and **Linux**, making the tool accessible to a wider range of developers." >> release-notes.md
               echo "" >> release-notes.md
-              echo "#### Enhancements" >> release-notes.md
-              echo "- `ac` alias added for `autocommitt`" >> release-notes.md
-              echo "- Ensured that the Ollama server is running before executing any commands (\`rm\`, \`use\`, \`gen\`, \`stop\`)" >> release-notes.md
+              echo "### Features" >> release-notes.md
+              echo "- **Cross-Platform Support**: Fully compatible with both **Windows** and **Linux**." >> release-notes.md
+              echo "- **New Alias**: Use \`act\` as the shorthand for \`autocommit\`." >> release-notes.md
               echo "" >> release-notes.md
-              echo "#### Bug Fixes" >> release-notes.md
-              echo "- Fixed model pulling in \`Ollama_Manager.py\`" >> release-notes.md
+              echo "### Improvements" >> release-notes.md
+              echo "- Resolved missing dependencies for smoother setup." >> release-notes.md
+              echo "- Updated README for error-free installation instructions." >> release-notes.md
+              echo "- Minor enhancements to overall performance and stability." >> release-notes.md
               echo "" >> release-notes.md
-              echo "#### Improvements" >> release-notes.md
-              echo "- Improved the quality of commit messages" >> release-notes.md
+              echo "### Notes" >> release-notes.md
+              echo "This is a **public beta release**, so we’d love your feedback! If you encounter any issues or have feature suggestions, please open an issue on GitHub or drop a comment." >> release-notes.md
+              echo "" >> release-notes.md
+              echo "Thank you for supporting AutoCommit! 🚀" >> release-notes.md
 
       - name: Create GitHub Release
         id: create_release

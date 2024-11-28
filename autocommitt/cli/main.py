@@ -1,15 +1,12 @@
-# cli.py
 import os
 import time
-import json
 import typer
+import shutil
 import signal
+import platform
 import subprocess
-from rich import box
-from enum import Enum
 from pathlib import Path
 from rich.text import Text
-from rich.theme import Theme
 from rich.table import Table
 from rich.panel import Panel
 from rich.console import Console
@@ -22,9 +19,8 @@ from autocommitt.utils.config_manager import ConfigManager
 app = typer.Typer()
 console = Console()
 
-
 @app.command()
-def start() -> Optional[subprocess.Popen]:
+def start():
     """
     Starts ollama server and ensures the default LLM model is available.
 
@@ -37,83 +33,48 @@ def start() -> Optional[subprocess.Popen]:
     │         Generated Locally, Commit Globally       │
     ╰──────────────────────────────────────────────────╯
     """
-    console = Console()
     console.print(Text(BANNER, justify="center"))
 
     # Ensure configuration is set up
     ConfigManager.ensure_config()
 
-    try:
-        # First check if server is already running
-        if OllamaManager.check_server_health():
-            console.print("[yellow]Ollama server is already running![/yellow]")
+    if shutil.which("ollama") is None:
+        console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
+        console.print("Please install Ollama following the instructions at: [cyan]https://ollama.ai/download[/cyan]")
+        raise typer.Exit(1)
+ 
+    # First check if server is already running
+    if not OllamaManager.is_server_running():
+    
+        started : bool = OllamaManager.start_ollama_service()
+        
+        if started:
+            time.sleep(3)
+            console.print("[green]Ollama server started successfully![/green]")
+        else:
             return None
 
-        # Start the server
-        process = subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-            creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
-        )
+    else:
+        console.print("[yellow]Warning: Ollama server is already running![/yellow]")
 
-        # Wait a bit for server to initialize
+    # Check and pull default model
+    model_name = "llama3.2:3b"
+
+    # console.print(f"[blue]Checking for default model {model_name}...[/blue]")
+    if not OllamaManager.is_model_present(model_name):
+        console.print(f"[cyan]Default model {model_name} not found.[/cyan]")
+
         time.sleep(1)
-
-        # Save PID
-        with open(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid", "w") as pid_file:
-            pid_file.write(str(process.pid))
-
-        console.print("[green]Ollama server started successfully![/green]")
-
-        # Check server health
-        # max_retries = 3
-        # retry_count = 0
-        # while retry_count < max_retries:
-        #     if ollama_cmd.check_server_health():
-        #         break
-        #     time.sleep(2)
-        #     retry_count += 1
-
-        # if retry_count == max_retries:
-        #     console.print("[red]Warning: Server started but may not be responding correctly[/red]")
-        #     return None
-
-        # Check and pull default model
-        model_name = "llama3.2:3b"  # Make sure this matches your default model name
-        console.print(f"[blue]Checking for default model {model_name}...[/blue]")
-
-        if not OllamaManager.is_model_present(model_name):
-            console.print(
-                f"[yellow]Default model {model_name} not found. Pulling...[/yellow]"
-            )
-            if not OllamaManager.pull_model(model_name):
-                console.print(
-                    "[red]Failed to pull default model. Please check your internet connection[/red]"
-                )
-                return process
-        else:
-            console.print(f"[green]Default model {model_name} is ready![/green]")
-
-        return process
-
-    except FileNotFoundError:
-        console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
-        console.print(
-            "[yellow]Please install Ollama following the instructions at: https://ollama.ai[/yellow]"
-        )
-        return None
-
-    except Exception as e:
-        console.print(f"[red]Failed to start Ollama server: {str(e)}[/red]")
-        return None
-
+        if not OllamaManager.pull_model(model_name):
+            console.print(f"[red]Failed to pull default model. Please check your internet connection[/red]")
+            return None
+    else:
+        console.print(f"[green]Default model {model_name} is ready![/green]")
+    return None
 
 @app.command()
 def stop():
     """Stops the running ollama server."""
-
     BANNER = """
     ╭────────────────── AutoCommitt ──────────────────╮
     │          Local AI Models Are Resting 😴         │
@@ -123,36 +84,24 @@ def stop():
     models = ConfigManager.get_models()
     config = ConfigManager.get_config()
 
-    try:
-        # Read the PID from the file
-        with open(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid", "r") as pid_file:
-            pid = int(pid_file.read().strip())
+    if OllamaManager.is_server_running():
+        stopped : bool=OllamaManager.stop_ollama_service()
+        if stopped:
+            # Update model status
+            active_model = config["model_name"]
+            models[active_model]["status"] = "disabled"
 
-        # Send the SIGTERM signal to terminate the process
-        os.kill(pid, signal.SIGTERM)
+            ConfigManager.save_config(config)
+            ConfigManager.save_models(models)
 
-        # update the table
-        active_model = config["model_name"]
-        models[active_model]["status"] = "disabled"
+            # Remove config files
+            os.remove(ConfigManager.CONFIG_FILE)
 
-        ConfigManager.save_config(config)
-        ConfigManager.save_models(models)
+            console.print(Text(BANNER, justify="center"))
+            console.print("[green]Ollama server stopped successfully.[/green]")
 
-        # Delete the config and PID file
-        os.remove(ConfigManager.CONFIG_FILE)
-        os.remove(f"{ConfigManager.CONFIG_DIR}/ollama_server.pid")
-
-        console.print(Text(BANNER, justify="center"))
-        console.print("[green]Ollama server stopped successfully.[/green]")
-
-    except FileNotFoundError:
-        console.print("[red]No running Ollama server found running![/red]")
-    except ProcessLookupError:
-        console.print(
-            "[yellow]Process not found. It may have already stopped.[/yellow]"
-        )
-    except Exception as e:
-        console.print(f"[red]Failed to stop Ollama server: {e}[/red]")
+    else:
+        console.print(f"[yellow]Warning: No Ollama server running found![/yellow]")
 
 
 @app.command()
@@ -161,14 +110,14 @@ def gen(
 ):
     """Generates a editable commit message."""
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
 
     changed_files = CommitManager.check_staged_changes()
 
     if not changed_files:
-        console.print("[yellow]No stagged changes to commit[/yellow]")
+        console.print("[yellow]Warning: No stagged changes to commit[/yellow]")
         raise typer.Exit(1)
 
     # Get selected model
@@ -191,7 +140,7 @@ def gen(
     if done:
         console.print(f"[green]Commit Sucessfull![/green]")
     else:
-        console.print(f"[red]Commit FAILED![/green]")
+        console.print(f"[red]Commit FAILED![/red]")
 
     if push:
         try:
@@ -210,7 +159,7 @@ def gen(
             return True
 
         except subprocess.CalledProcessError as e:
-            console.print(f"[red]Error: Auto pushing FAILED.[/red]")
+            console.print(f"[red]Error: Auto pushing FAILED![/red]")
             console.print(f"[red]{e.stderr}[/red]")
             return False
 
@@ -271,8 +220,8 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
     """Delete a model from available models"""
 
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
         
     models = ConfigManager.get_models()
@@ -285,8 +234,8 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
     
     # Check if it's a default model
     if models[model_name].get('status')=="active":
-        console.print(f"[red]Error: Cannot remove currently selected model[/red]")
-        console.print("Please switch to another model first using 'use' command")
+        console.print(f"[red]Error: Cannot remove currently active model![/red]")
+        console.print("Please switch to a different model first using the 'use' command.")
         raise typer.Exit(1)
 
     if models[model_name].get("downloaded")=="no":
@@ -300,8 +249,8 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
     
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running...[/red]")
-        console.print(f"[cyan]Start the ollama server first by running `autocommitt start`.[/cyan]")
+        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
         raise typer.Exit(1)
 
     models = ConfigManager.get_models()
@@ -349,6 +298,7 @@ def his(
                 check=True,
                 capture_output=True,
                 text=True,
+                creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
             )
             
             if result.stdout:
@@ -383,8 +333,5 @@ def his(
         console.print(f"[red]Unexpected error: {str(e)}[/red]")
         return False
               
-
-
-
 if __name__ == "__main__":
     app()

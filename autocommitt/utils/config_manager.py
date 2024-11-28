@@ -1,4 +1,3 @@
-import os
 import json
 from typing import Dict
 from pathlib import Path
@@ -21,25 +20,25 @@ class ConfigManager:
 
     DEFAULT_MODELS = {
         "llama3.2:1b": {
-            "description": "Lightweight model good for simple commits",
+            "description": "Lightweight model suitable for basic commit messages",
             "size": "1.3GB",
             "status": "disabled",
             "downloaded": "no",
         },
         "gemma2:2b": {
-            "description": "Improved lightweight model",
+            "description": "Enhanced lightweight model for moderate commit complexity",
             "size": "1.6GB",
             "status": "disabled",
             "downloaded": "no",
         },
         "llama3.2:3b": {
-            "description": "Good quality for complex changes",
+            "description": "Balanced model for handling complex commits",
             "size": "2.0GB",
             "status": "disabled",
             "downloaded": "no",
         },
         "llama3.1:8b": {
-            "description": "Best quality for complex changes",
+            "description": "High-performance model for detailed and intricate commits",
             "size": "4.7GB",
             "status": "disabled",
             "downloaded": "no",

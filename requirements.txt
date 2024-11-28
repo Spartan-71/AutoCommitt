@@ -5,6 +5,7 @@ cffi==1.17.1
 cfgv==3.4.0
 charset-normalizer==3.4.0
 click==8.1.7
+colorama==0.4.6
 cryptography==43.0.3
 distlib==0.3.9
 docutils==0.21.2
@@ -32,8 +33,11 @@ pathspec==0.12.1
 pkginfo==1.10.0
 platformdirs==4.3.6
 pre_commit==4.0.1
+psutil==6.1.0
 pycparser==2.22
 Pygments==2.18.0
+pyreadline3==3.5.4
+pywin32-ctypes==0.2.3
 PyYAML==6.0.2
 readme_renderer==44.0
 requests==2.32.3
