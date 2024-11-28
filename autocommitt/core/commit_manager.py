@@ -164,13 +164,13 @@ class CommitManager:
             return False
     
     @staticmethod
-    def generate(cls):
+    def generate():
         """
         Orchestrate the entire commit generation process.
         Checks staged changes, generates and edits commit message, then commits.
         """
-        diff_output = check_staged_changes()
+        diff_output = CommitManager.check_staged_changes()
         if diff_output:
-            initial_message = generate_commit_message(diff_output)
-            final_message = edit_commit_message(initial_message)
-            perform_git_commit(final_message)
+            initial_message = CommitManager.generate_commit_message(diff_output)
+            final_message = CommitManager.edit_commit_message(initial_message)
+            CommitManager.perform_git_commit(final_message)

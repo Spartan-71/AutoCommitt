@@ -211,7 +211,7 @@ class OllamaManager:
                 return True
 
             # Model needs to be pulled
-            console.print(f"[yellow]Pulling {model_name}...[/yellow]")
+            console.print(f"[cyan]Pulling {model_name}...[/cyan]")
             console.print("NOTE: The download time varies based on your internet speed and the model size.\nIf the download doesn't complete within 10 minutes, please try running the command again.")
             time.sleep(1)
             
