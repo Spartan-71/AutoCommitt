@@ -84,17 +84,17 @@ class OllamaManager:
         try:
             if os_type == "Linux":
                 # For Linux, use systemd to stop the service
-                subprocess.run(["sudo", "systemctl", "stop", "ollama.service"], check=True, timeout=3)
+                subprocess.run(["sudo", "systemctl", "stop", "ollama.service"], check=True, timeout=10)
                 return True
             
             elif os_type == "Darwin":
                 # For macOS, find and kill the process
-                result = subprocess.run(["pkill", "-f", "ollama"], check=True, timeout=3)
+                result = subprocess.run(["pkill", "-f", "ollama"], check=True, timeout=10)
                 return result.returncode == 0
             
             elif os_type == "Windows":
                 # For Windows, find and terminate the process
-                result = subprocess.run(["taskkill", "/F", "/IM", "ollama.exe"], check=True, timeout=3)
+                result = subprocess.run(["taskkill", "/F", "/IM", "ollama.exe"], check=True, timeout=10)
                 return result.returncode == 0
             
             else:
