@@ -23,10 +23,12 @@ setup(
         "local AI",
     ],
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
+        "Operating System :: Windows",
+        "Operating System :: MacOS"
     ],
     entry_points={
         "console_scripts": ["autocommitt = autocommitt.cli.main:app","ac = autocommitt.cli.main:app"]
