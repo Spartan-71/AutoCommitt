@@ -1,6 +1,7 @@
 import os
 import time
 import typer
+import shutil
 import signal
 import platform
 import subprocess
@@ -37,6 +38,11 @@ def start():
     # Ensure configuration is set up
     ConfigManager.ensure_config()
 
+    if shutil.which("ollama") is None:
+        console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
+        console.print("Please install Ollama following the instructions at: [cyan]https://ollama.ai/download[/cyan]")
+        raise typer.Exit(1)
+ 
     # First check if server is already running
     if not OllamaManager.is_server_running():
     
@@ -56,7 +62,7 @@ def start():
 
     # console.print(f"[blue]Checking for default model {model_name}...[/blue]")
     if not OllamaManager.is_model_present(model_name):
-        console.print(f"[yellow]Default model {model_name} not found.[/yellow]")
+        console.print(f"[cyan]Default model {model_name} not found.[/cyan]")
 
         time.sleep(1)
         if not OllamaManager.pull_model(model_name):
@@ -134,7 +140,7 @@ def gen(
     if done:
         console.print(f"[green]Commit Sucessfull![/green]")
     else:
-        console.print(f"[red]Commit FAILED![/green]")
+        console.print(f"[red]Commit FAILED![/red]")
 
     if push:
         try:
