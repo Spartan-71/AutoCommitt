@@ -1,10 +1,18 @@
 from setuptools import setup, find_packages
-from autocommitt.utils.check_installation import is_ollama_installed, download_and_install_ollama
+import sys
 
 # Read the contents of your README file
 with open('README.md', 'r', encoding='utf-8') as f:
     long_des = f.read()
-    
+
+# Conditional dependencies for platform-specific requirements
+platform_specific_requires = []
+if sys.platform == "win32":
+    platform_specific_requires.append("pyreadline3")
+    platform_specific_requires.append("psutil")
+elif sys.platform == "darwin" or sys.platform.startswith("linux"):
+    platform_specific_requires.append("gnureadline")
+
 setup(
     name="autocommitt",
     version="v0.1.10",
@@ -14,7 +22,12 @@ setup(
     long_description=long_des,
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    install_requires=["ollama","typer"],
+    install_requires=[
+        "ollama",
+        "typer",
+        "requests",
+        "platformdirs",
+    ] + platform_specific_requires,
     keywords=[
         "autocommit",
         "aicommit",
@@ -31,7 +44,10 @@ setup(
         "Operating System :: MacOS"
     ],
     entry_points={
-        "console_scripts": ["autocommitt = autocommitt.cli.main:app","ac = autocommitt.cli.main:app"]
+        "console_scripts": [
+            "autocommitt = autocommitt.cli.main:app",
+            "ac = autocommitt.cli.main:app"
+        ]
     },
     url="https://github.com/Spartan-71/autocommitt",  # Update with your actual URL
     license="Apache-2.0",  # Specify your license type
