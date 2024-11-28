@@ -1,6 +1,6 @@
 import os
-import sys
 import time
+import psutil
 import platform
 import requests
 import subprocess
@@ -93,9 +93,25 @@ class OllamaManager:
                 return result.returncode == 0
             
             elif os_type == "Windows":
-                # For Windows, find and terminate the process
-                result = subprocess.run(["taskkill", "/F", "/IM", "ollama.exe"], check=True, timeout=10)
-                return result.returncode == 0
+                try:
+                    # Find and terminate all Ollama-related processes
+                    for proc in psutil.process_iter(['name']):
+                        if proc.info['name'] in ["ollama.exe", "ollama-app.exe"]:
+                            try:
+                                proc.terminate()
+                                # Wait a bit for graceful termination
+                                proc.wait(timeout=5)
+                            except psutil.NoSuchProcess:
+                                pass
+                            except psutil.TimeoutExpired:
+                                # Force kill if not terminated
+                                proc.kill()
+                    
+                    return True
+                
+                except Exception as e:
+                    print(f"Error stopping Ollama: {e}")
+                    return False
             
             else:
                 console.print("[red]Unsupported operating system. Cannot stop Ollama service.[/red]")
