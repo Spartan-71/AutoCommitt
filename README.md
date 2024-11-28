@@ -1,6 +1,7 @@
-![2](https://github.com/user-attachments/assets/d1a4c15e-8bdf-448b-adc0-4a0c39a3a023)
+![alt text](3.png)
 
-A lightweight CLI tool that automatically generates meaningful commit messages using small, efficient AI models locally. AutoCommitt leverages Ollama to create concise, context-aware commit messages while keeping resource usage minimal.
+
+AutoCommit is a free and open-source **AI-powered CLI tool** that generates unlimited commit messages locally using **Ollama**. It works entirely offline, requiring no API keys, providing developers with a private and efficient way to create concise, context-aware commit messages.
 
 <div align="center">
 
@@ -19,7 +20,7 @@ A lightweight CLI tool that automatically generates meaningful commit messages u
 
 ## Setup
 ### Prerequisites
-- **Ollama**: Download and install from [offical website](https://ollama.com/download).
+- **Ollama**: Download and install ollama from [offical website](https://ollama.com/download).
 - **RAM** (minimum):  
    - 8GB for smaller models (<=3B parameters)  
    - 16GB for optimal performance
@@ -49,10 +50,10 @@ pip install -U autocommitt
 ## Basic Usage
 
 1. **Start the Ollama Server**  
-Launch the Ollama server to activate model-based commit message generation.
    ```bash
    autocommitt start
    ```
+   > **Note**: The Ollama server starts automatically after installation. However, running this command ensures that all configuration files are updated and a default model is properly set up.
 
 2. **Stage Your Changes**  
    Stage the files you want to commit using Git:  
@@ -76,12 +77,13 @@ Launch the Ollama server to activate model-based commit message generation.
    > **Pro Tip**: Save time by using the `--push` flag to combine committing and pushing into a single step.
 
 4. **Stop the Ollama Server**  
-   Once you're done, stop the Ollama server to free up resources:  
+   To free up resources after you're done, stop the Ollama server:  
    ```bash
    autocommitt stop
    ```
+   > **Note**: This command is supported only on Linux. On Windows and macOS, the Ollama server runs continuously as long as the machine is active. 
 
->**Note**: You can use the `ac` alias for `autocommitt` throughout, making commands shorter and quicker to type!
+>**Pro Tip**: You can use the `act` alias for `autocommitt` throughout, making commands shorter and quicker to type!
 
 
 ## Additional Commands
@@ -124,7 +126,7 @@ autocommitt his -n 5
 It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
 ## Future Enhancements
-- **Cross-Platform Support**: Compatibility for Windows.
+- **Cross-Platform Support**: Compatibility for MacOS.
 - **Git Hooks Integration**: Compatible with pre-commit hooks
 - **Custom Templates**: Support for user-defined commit message templates
 
