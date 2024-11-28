@@ -11,7 +11,7 @@ if sys.platform == "win32":
     platform_specific_requires.append("pyreadline3")
     platform_specific_requires.append("psutil")
 elif sys.platform == "darwin" or sys.platform.startswith("linux"):
-    platform_specific_requires.append("gnureadline")
+    platform_specific_requires.append("readline")
 
 setup(
     name="autocommitt",
