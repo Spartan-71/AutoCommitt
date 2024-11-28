@@ -20,6 +20,7 @@ AutoCommit is a free and open-source **AI-powered CLI tool** that generates unli
 
 ## Setup
 ### Prerequisites
+
 - **Ollama**: Download and install ollama from [offical website](https://ollama.com/download).
 - **RAM** (minimum):  
    - 8GB for smaller models (<=3B parameters)  
