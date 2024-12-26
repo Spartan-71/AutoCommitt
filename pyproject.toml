@@ -1,41 +1,47 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "autocommitt"
-version = "0.1.10"
+version = "0.1.11"
 description = "A CLI tool for generating editable commit messages locally using Ollama."
+authors = [
+    { name = "Spartan-71", email = "anishdabhane71@gmail.com" }
+]
+license = { file = "LICENSE" }  # You can also use 'file = "LICENSE"' if you have a LICENSE file
+
+keywords = [
+    "autocommit",
+    "aicommit",
+    "git automation",
+    "CLI tool",
+    "local AI"
+]
 readme = "README.md"
-authors = [{ name = "Anish Dabhane", email = "anishdabhane@gmail.com" }]
-license = { text = "Apache-2.0" }
-keywords = ["autocommit", "aicommit", "git automation", "CLI tool", "local AI"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
-    "Operating System :: Unix",
-    "Operating System :: Microsoft :: Windows :: Windows 10",
-    "Operating System :: Microsoft :: Windows :: Windows 11",
-    "Operating System :: MacOS"
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS :: MacOS X"
 ]
-requires-python = ">=3.10"
 
+project.urls = "https://github.com/Spartan-71/autocommitt"
+
+requires-python = ">=3.12"
 dependencies = [
-    "ollama",
-    "typer",
-    "requests",
-    "platformdirs",
-    "psutil"
+    "ollama>=0.4.4",
+    "platformdirs>=4.3.6",
+    "psutil>=6.1.1",
+    "requests>=2.32.3",
+    "typer>=0.15.1",
+    "pyreadline3; sys_platform == 'win32'"
 ]
-
-[project.optional-dependencies]
-windows = ["pyreadline3"]
 
 [project.scripts]
 autocommitt = "autocommitt.cli.main:app"
 act = "autocommitt.cli.main:app"
 
-[tool.setuptools]
-packages = ["find:"]  # This will automatically find packages in your source directory
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
+requires-python = ">3.10"

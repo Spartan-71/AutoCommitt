@@ -12,7 +12,7 @@ if sys.platform == "win32":
 
 setup(
     name="autocommitt",
-    version="v0.1.10",
+    version="v0.1.12",
     author="Anish Dabhane",
     author_email="anishdabhane@gmail.com",
     description="A CLI tool for generating editable commit messages locally using Ollama.",
