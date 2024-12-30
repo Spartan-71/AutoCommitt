@@ -52,7 +52,7 @@ pip install -U autocommitt
 
 1. **Start the Ollama Server**  
    ```bash
-   autocommitt start
+   act start
    ```
    > **Note**: The Ollama server starts automatically after installation. However, running this command ensures that all configuration files are updated and a default model is properly set up.
 
@@ -65,14 +65,14 @@ pip install -U autocommitt
 3. **Generate and Edit Commit Messages**  
    Generate a commit message based on your staged changes:  
    ```bash
-   autocommitt gen
+   act gen
    ```  
 
    - The tool generates a message and allows you to review and edit it before committing.  
 
    - To **automatically push** the commit to the remote repository, use the `-p` or `--push` flag:  
      ```bash
-     autocommitt gen -p
+     act gen -p
      ```  
 
    > **Pro Tip**: Save time by using the `--push` flag to combine committing and pushing into a single step.
@@ -80,11 +80,11 @@ pip install -U autocommitt
 4. **Stop the Ollama Server**  
    To free up resources after you're done, stop the Ollama server:  
    ```bash
-   autocommitt stop
+   act stop
    ```
    > **Note**: This command is supported only on Linux. On Windows and macOS, the Ollama server runs continuously as long as the machine is active. 
 
->**Pro Tip**: You can use the `act` alias for `autocommitt` throughout, making commands shorter and quicker to type!
+>**Pro Tip**: You can use the `autocommitt` alias for `act` throughout, making commands shorter and quicker to type!
 
 
 ## Additional Commands
@@ -95,18 +95,18 @@ By default, **AutoCommitt** uses the `llama3.2:3b` model to generate commit mess
 
 - To view the list of available models, run the following command:
    ```bash
-   autocommitt list
+   act list
    ```
 - To select and set a model as active:
    ```bash
-   autocommitt use <model_name>
+   act use <model_name>
    ```
    > **Note**: If the model is not already downloaded, this command will pull the model by running `ollama pull <model_name>` and set it as the default.
 
 #### 2. Deleting a Model
 
 ```bash
-autocommitt rm <model_name>
+act rm <model_name>
 ```
 > **Note**: Since models require a significant amount of memory (minimum 2GB), it is recommended to use only one model and delete the rest to free up space.
 
@@ -117,7 +117,7 @@ autocommitt rm <model_name>
 Easily view recent commit messages using the `his` command:
 
 ```bash
-autocommitt his -n 5
+act his -n 5
 ```
 - **Flag Description**:`-n` or `--limit`: (Optional) Specify the number of recent commit messages to retrieve. If omitted, all commit messages will be displayed.
 
@@ -135,7 +135,6 @@ It runs the `git diff --staged` command to gather all staged changes and process
 
 We welcome contributions! To report bugs, fix issues, or add features, visit the [Issues](https://github.com/Spartan-71/AutoCommitt/issues) page. Please review our [Contribution Guide](CONTRIBUTING.md) for setup and contribution instructions.
 
-For discussions or real-time collaboration, join our [Gitter community](https://matrix.to/#/#autocommitt:gitter.im). Your contributions are appreciated!
 
 ## Acknowledgments
 
