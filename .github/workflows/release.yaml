@@ -67,36 +67,39 @@ jobs:
           fi
 
   setup_and_build:
-    needs: [details, check_pypi]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  needs: [details, check_pypi]
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
 
-      - name: Install dependancies
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -r requirements.txt
+    - name: Install uv
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install uv
 
-      - name: Set project version dynamically
-        run: |
-          new_version="${{ needs.details.outputs.new_version }}"
-          sed -i "s/version=.*/version='${new_version}',/" setup.py
+    - name: Install dependencies using uv
+      run: |
+        uv sync --file uv-lock.yaml
 
-      - name: Build source and wheel distribution
-        run: |
-          python setup.py sdist
-          python setup.py bdist_wheel
+    - name: Set project version dynamically
+      run: |
+        new_version="${{ needs.details.outputs.new_version }}"
+        sed -i "s/^version = .*/version = \"${new_version}\"/" pyproject.toml
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
+    - name: Build source and wheel distribution using uv
+      run: |
+        uv build
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: dist/
 
   pypi_publish:
     name: Upload release to PyPI
