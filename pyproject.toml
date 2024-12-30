@@ -1,10 +1,6 @@
 [project]
 name = "autocommitt"
-<<<<<<< HEAD
-version = "v0.1.11"
-=======
-version = "0.1.11"
->>>>>>> c9ad4cc (ci: update dependencies and setup configuration)
+version = "v0.1.12"
 description = "A CLI tool for generating editable commit messages locally using Ollama."
 authors = [
     { name = "Spartan-71", email = "anishdabhane71@gmail.com" }

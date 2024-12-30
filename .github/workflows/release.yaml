@@ -140,22 +140,13 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-<<<<<<< HEAD
               echo "## What's New" > release-notes.md
-=======
-              echo "## Public Beta Release" > release-notes.md
-              echo "" >> release-notes.md
-              echo "We’re excited to announce the release of **AutoCommit v0.1.10**! 🎉 This version marks a significant milestone as it brings compatibility with both **Windows** and **Linux**, making the tool accessible to a wider range of developers." >> release-notes.md
-              echo "" >> release-notes.md
-              echo "### Features" >> release-notes.md
-              echo "- **Cross-Platform Support**: Fully compatible with both **Windows** and **Linux**." >> release-notes.md
-              echo "- **New Alias**: Use \`act\` as the shorthand for \`autocommit\`." >> release-notes.md
->>>>>>> main
               echo "" >> release-notes.md
               echo "### Improvements" >> release-notes.md
-              echo "- Shifted to `uv` for package management" >> release-notes.md
-              echo "- Updated README to `act` alias instead of `autocommitt`" >> release-notes.md
+              echo "- Transitioned to \`uv\` for package management" >> release-notes.md
+              echo "- Updated README to use \`act\` alias instead of \`autocommitt\`" >> release-notes.md
               echo "" >> release-notes.md
+
 
       - name: Create GitHub Release
         id: create_release
