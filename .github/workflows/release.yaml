@@ -67,39 +67,43 @@ jobs:
           fi
 
   setup_and_build:
-  needs: [details, check_pypi]
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v2
+    needs: [details, check_pypi]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
 
-    - name: Install uv
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-        python -m pip install uv
+      - name: Install uv
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install uv
 
-    - name: Install dependencies using uv
-      run: |
-        uv sync --file uv-lock.yaml
+      - name: Generate uv lock file
+        run: |
+          uv pip compile pyproject.toml -o uv-lock.yaml
 
-    - name: Set project version dynamically
-      run: |
-        new_version="${{ needs.details.outputs.new_version }}"
-        sed -i "s/^version = .*/version = \"${new_version}\"/" pyproject.toml
+      - name: Install dependencies using uv
+        run: |
+          uv sync --file uv-lock.yaml
 
-    - name: Build source and wheel distribution using uv
-      run: |
-        uv build
+      - name: Set project version dynamically
+        run: |
+          new_version="${{ needs.details.outputs.new_version }}"
+          sed -i "s/^version = .*/version = \"${new_version}\"/" pyproject.toml
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: dist/
+      - name: Build source and wheel distribution using uv
+        run: |
+          uv build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
 
   pypi_publish:
     name: Upload release to PyPI
@@ -140,13 +144,12 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-              echo "## What's New" > release-notes.md
-              echo "" >> release-notes.md
-              echo "### Improvements" >> release-notes.md
-              echo "- Transitioned to \`uv\` for package management" >> release-notes.md
-              echo "- Updated README to use \`act\` alias instead of \`autocommitt\`" >> release-notes.md
-              echo "" >> release-notes.md
-
+          echo "## What's New" > release-notes.md
+          echo "" >> release-notes.md
+          echo "### Improvements" >> release-notes.md
+          echo "- Transitioned to \`uv\` for package management" >> release-notes.md
+          echo "- Updated README to use \`act\` alias instead of \`autocommitt\`" >> release-notes.md
+          echo "" >> release-notes.md
 
       - name: Create GitHub Release
         id: create_release
