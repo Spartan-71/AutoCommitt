@@ -86,10 +86,6 @@ jobs:
         run: |
           uv pip compile pyproject.toml -o uv-lock.yaml
 
-      - name: Install dependencies using uv
-        run: |
-          uv sync --file uv-lock.yaml
-
       - name: Set project version dynamically
         run: |
           new_version="${{ needs.details.outputs.new_version }}"
@@ -144,7 +140,7 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-          echo "## What's New (v0.2.0)" > release-notes.md
+          echo "## What's New (v0.2.1)" > release-notes.md
           echo "" >> release-notes.md
           echo "### Improvements" >> release-notes.md
           echo "- Transitioned to \`uv\` for package management" >> release-notes.md

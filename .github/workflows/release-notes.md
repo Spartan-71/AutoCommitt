@@ -1,4 +1,4 @@
-## What's New (v0.2.0)
+## What's New (v0.2.1)
 
 ### Improvements
 - Transitioned to `uv` for package management
