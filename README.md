@@ -51,19 +51,13 @@ pip install -U autocommitt
 
 ## Basic Usage
 
-1. **Start the Ollama Server**  
-   ```bash
-   act start
-   ```
-   > **Note**: The Ollama server starts automatically after installation. However, running this command ensures that all configuration files are updated and a default model is properly set up.
-
-2. **Stage Your Changes**  
+1. **Stage Your Changes**  
    Stage the files you want to commit using Git:  
    ```bash
    git add <files...>
    ```
 
-3. **Generate and Edit Commit Messages**  
+2. **Generate and Edit Commit Messages**  
    Generate a commit message based on your staged changes:  
    ```bash
    act gen
@@ -76,21 +70,9 @@ pip install -U autocommitt
      act gen -p
      ```  
 
-   > **Pro Tip**: Save time by using the `--push` flag to combine committing and pushing into a single step.
-
-4. **Stop the Ollama Server**  
-   To free up resources after you're done, stop the Ollama server:  
-   ```bash
-   act stop
-   ```
-   > **Note**: This command is supported only on Linux. On Windows and macOS, the Ollama server runs continuously as long as the machine is active. 
-
->**Pro Tip**: You can use the `autocommitt` alias for `act` throughout, making commands shorter and quicker to type!
-
-
 ## Additional Commands
 
-By default, **AutoCommitt** uses the `llama3.2:3b` model to generate commit messages.
+By default, **AutoCommitt** uses the `deepseek-r1:1.5b` model to generate commit messages.
 
 #### 1. Using a Custom Model
 
