@@ -1,9 +1,8 @@
-![4](https://github.com/user-attachments/assets/b2a26ff4-9261-4872-aceb-a7d9e803e972)
+![new_banner](https://github.com/user-attachments/assets/8246b6c9-2bf0-440c-a178-5404d2f0915b)
 
 
 
-AutoCommit is a free and open-source **AI-powered CLI tool** that generates unlimited commit messages locally using **Ollama**. It works entirely offline, requiring no API keys, providing developers with a private and efficient way to create concise, context-aware commit messages.
-
+AutoCommit is a free and open-source **AI-powered CLI tool** that generates context-aware commit messages locally using **Ollama**.
 <div align="center">
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
