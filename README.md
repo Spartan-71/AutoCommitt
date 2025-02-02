@@ -91,9 +91,6 @@ By default, **AutoCommitt** uses the `deepseek-r1:1.5b` model to generate commit
 ```bash
 act rm <model_name>
 ```
-> **Note**: Since models require a significant amount of memory (minimum 2GB), it is recommended to use only one model and delete the rest to free up space.
-
-
 
 #### 3. Viewing Commit History
 
@@ -103,11 +100,6 @@ Easily view recent commit messages using the `his` command:
 act his -n 5
 ```
 - **Flag Description**:`-n` or `--limit`: (Optional) Specify the number of recent commit messages to retrieve. If omitted, all commit messages will be displayed.
-
-> **Pro Tip**: Use this command to quickly review your project's recent changes before generating new commit messages.
-
-## How It Works
-It runs the `git diff --staged` command to gather all staged changes and processes them using a local LLM (default: `llama3.2:3b` provided by Ollama). The model analyzes the changes and generates a concise, context-aware commit message, ensuring privacy and avoiding external API dependencies.  
 
 ## Future Enhancements
 - **Cross-Platform Support**: Compatibility for MacOS.
