@@ -80,9 +80,10 @@ class CommitManager:
                             chore: Other changes that don't modify src or test files,
                             revert: Reverts a previous commit',
                             feat: A new feature,
-                        Now, generate a concise git commit message written in present tense in the format "type": "description" for the output of git diff command which is provided by the user.
+                        Now, generate a concise git commit message written in present tense in the format type: description for the output of git diff command which is provided by the user.
+                        The git diff output can have changes in multiple files so analyze that properly and generate a commit message all taking all the changes into consideration.
                         Exclude anything unnecessary such as translation. Your entire response will be passed directly into git commit.
-                        Generate only one commit message of maximum length 40 characters, no explanations.
+                        Generate only one commit message of maximum length 60 characters, no explanations.
                         """
 
         message = ""
@@ -116,7 +117,7 @@ class CommitManager:
             import readline  # Optional readline support
         except ImportError:
             try:
-                import pyreadline3 as readline
+                import pyreadline3 as readline # for windows
             except ImportError:
                 readline = None
 
