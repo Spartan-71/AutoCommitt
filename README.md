@@ -1,13 +1,14 @@
-![new_banner](https://github.com/user-attachments/assets/8246b6c9-2bf0-440c-a178-5404d2f0915b)
+![new_banner](https://github.com/user-attachments/assets/4f867876-3651-4cc7-9cf1-a136c44b73ec)
 
-
-
-AutoCommit is a FOSS **AI-powered CLI tool** that generates context-aware commit messages locally using **Ollama**.
 <div align="center">
-
+   
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
 ![PyPI Downloads](https://static.pepy.tech/badge/autocommitt)
+   
+AutoCommit is a FOSS **AI-powered CLI tool** that generates context-aware commit messages locally using **Ollama**.\
+   
+
 
 </div>
 
