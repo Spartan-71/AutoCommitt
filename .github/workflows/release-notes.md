@@ -1,5 +1,6 @@
-## What's New (v0.2.1)
+## What's New (v0.3.0)
 
 ### Improvements
-- Transitioned to `uv` for package management
-- Updated README to use `act` alias instead of `autocommitt`
+- Added deepseek-r1:1.5b model
+- Now default model is deepseek-r1:1.5b
+- Fixed committ msg generation for multiple files changes

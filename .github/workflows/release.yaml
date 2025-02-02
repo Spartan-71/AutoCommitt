@@ -140,11 +140,12 @@ jobs:
       - name: Generate Release Notes
         id: generate_notes
         run: |
-          echo "## What's New (v0.2.1)" > release-notes.md
+          echo "## What's New (v0.3.0)" > release-notes.md
           echo "" >> release-notes.md
           echo "### Improvements" >> release-notes.md
-          echo "- Transitioned to \`uv\` for package management" >> release-notes.md
-          echo "- Updated README to use \`act\` alias instead of \`autocommitt\`" >> release-notes.md
+          echo "- Added deepseek-r1:1.5b model" >> release-notes.md
+          echo "- Now default model is deepseek-r1:1.5b" >> release-notes.md
+          echo "- Fixed committ msg generation for multiple files changes" >> release-notes.md
           echo "" >> release-notes.md
 
       - name: Create GitHub Release
