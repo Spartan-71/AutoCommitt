@@ -2,7 +2,7 @@
 
 
 
-AutoCommit is a free and open-source **AI-powered CLI tool** that generates context-aware commit messages locally using **Ollama**.
+AutoCommit is a FOSS **AI-powered CLI tool** that generates context-aware commit messages locally using **Ollama**.
 <div align="center">
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
