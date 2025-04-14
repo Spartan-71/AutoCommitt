@@ -1,7 +1,7 @@
 import os
 import ollama
 import subprocess
-from typing import Tuple, Optional,List
+from typing import Tuple, Optional, List
 
 
 class CommitManager:
@@ -24,12 +24,12 @@ class CommitManager:
         try:
             process = subprocess.run(
                 command,
-                capture_output = True, 
-                text = True,
-                check = True,
-                creationflags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-                encoding = "utf-8",
-                errors = 'replace'
+                capture_output=True,
+                text=True,
+                check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+                encoding="utf-8",
+                errors="replace",
             )
             return process.stdout, None
         except subprocess.CalledProcessError as e:
@@ -91,7 +91,7 @@ class CommitManager:
             model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": diff_output}
+                {"role": "user", "content": diff_output},
             ],
             stream=True,
         )
@@ -117,7 +117,7 @@ class CommitManager:
             import readline  # Optional readline support
         except ImportError:
             try:
-                import pyreadline3 as readline # for windows
+                import pyreadline3 as readline  # for windows
             except ImportError:
                 readline = None
 
@@ -156,14 +156,14 @@ class CommitManager:
                 stderr=subprocess.PIPE,
                 text=True,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-                encoding='utf-8',
-                errors='replace'
+                encoding="utf-8",
+                errors="replace",
             )
             return True
         except subprocess.CalledProcessError as e:
             print(f"Error: {e.stderr}")
             return False
-    
+
     @staticmethod
     def generate():
         """

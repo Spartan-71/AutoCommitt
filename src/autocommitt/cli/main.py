@@ -19,6 +19,7 @@ from autocommitt.utils.config_manager import ConfigManager
 app = typer.Typer()
 console = Console()
 
+
 @app.command()
 def start():
     """
@@ -40,14 +41,16 @@ def start():
 
     if shutil.which("ollama") is None:
         console.print("[red]Error: Ollama is not installed or not in PATH[/red]")
-        console.print("Please install Ollama following the instructions at: [cyan]https://ollama.ai/download[/cyan]")
+        console.print(
+            "Please install Ollama following the instructions at: [cyan]https://ollama.ai/download[/cyan]"
+        )
         raise typer.Exit(1)
- 
+
     # First check if server is already running
     if not OllamaManager.is_server_running():
-    
-        started : bool = OllamaManager.start_ollama_service()
-        
+
+        started: bool = OllamaManager.start_ollama_service()
+
         if started:
             time.sleep(3)
             console.print("[green]Ollama server started successfully![/green]")
@@ -66,11 +69,14 @@ def start():
 
         time.sleep(1)
         if not OllamaManager.pull_model(model_name):
-            console.print(f"[red]Failed to pull default model. Please check your internet connection[/red]")
+            console.print(
+                f"[red]Failed to pull default model. Please check your internet connection[/red]"
+            )
             return None
     else:
         console.print(f"[green]Default model {model_name} is ready![/green]")
     return None
+
 
 @app.command()
 def stop():
@@ -85,7 +91,7 @@ def stop():
     config = ConfigManager.get_config()
 
     if OllamaManager.is_server_running():
-        stopped : bool=OllamaManager.stop_ollama_service()
+        stopped: bool = OllamaManager.stop_ollama_service()
         if stopped:
             # Update model status
             active_model = config["model_name"]
@@ -111,7 +117,9 @@ def gen(
     """Generates a editable commit message."""
     if not OllamaManager.is_server_running():
         console.print(f"[red]Error: Ollama server is not running![/red]")
-        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
+        console.print(
+            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+        )
         raise typer.Exit(1)
 
     changed_files = CommitManager.check_staged_changes()
@@ -151,7 +159,7 @@ def gen(
                 capture_output=True,
                 text=True,
             )
-            # Print the output 
+            # Print the output
             if result.stdout:
                 console.print(result.stdout.strip())
 
@@ -164,13 +172,14 @@ def gen(
             return False
 
         except FileNotFoundError:
-            console.print("[red]Error: Git is not installed or not found in PATH.[/red]")
+            console.print(
+                "[red]Error: Git is not installed or not found in PATH.[/red]"
+            )
             return False
 
         except Exception as e:
             console.print(f"[red]Unexpected error: {str(e)}[/red]")
             return False
-
 
 
 @app.command()
@@ -215,63 +224,75 @@ def list():
     ConfigManager.save_models(models)
     console.print(table)
 
+
 @app.command()
 def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")):
     """Delete a model from available models"""
 
     if not OllamaManager.is_server_running():
         console.print(f"[red]Error: Ollama server is not running![/red]")
-        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
-        raise typer.Exit(1)
-        
-    models = ConfigManager.get_models()
-    config = ConfigManager.get_config()
-    
-    # Check if model exists
-    if not OllamaManager.is_model_present(model_name):
-        console.print(f"[yellow]Model {model_name} doesn't exist, skipping deletion.[/yellow]")
-        raise typer.Exit(1)
-    
-    # Check if it's a default model
-    if models[model_name].get('status')=="active":
-        console.print(f"[red]Error: Cannot remove currently active model![/red]")
-        console.print("Please switch to a different model first using the 'use' command.")
+        console.print(
+            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+        )
         raise typer.Exit(1)
 
-    if models[model_name].get("downloaded")=="no":
-        console.print(f"[yellow]Warning: Model: '{model_name}' is not downloaded![/yellow]")
-    
+    models = ConfigManager.get_models()
+    config = ConfigManager.get_config()
+
+    # Check if model exists
+    if not OllamaManager.is_model_present(model_name):
+        console.print(
+            f"[yellow]Model {model_name} doesn't exist, skipping deletion.[/yellow]"
+        )
+        raise typer.Exit(1)
+
+    # Check if it's a default model
+    if models[model_name].get("status") == "active":
+        console.print(f"[red]Error: Cannot remove currently active model![/red]")
+        console.print(
+            "Please switch to a different model first using the 'use' command."
+        )
+        raise typer.Exit(1)
+
+    if models[model_name].get("downloaded") == "no":
+        console.print(
+            f"[yellow]Warning: Model: '{model_name}' is not downloaded![/yellow]"
+        )
+
     # Remove the model
     OllamaManager.delete_model(model_name)
+
 
 @app.command()
 def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
-    
+
     if not OllamaManager.is_server_running():
         console.print(f"[red]Error: Ollama server is not running![/red]")
-        console.print(f"Start the ollama server by running [cyan]autocommitt start[/cyan] command.")
+        console.print(
+            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+        )
         raise typer.Exit(1)
 
     models = ConfigManager.get_models()
-    
+
     if model_name not in models:
         console.print(f"[red]Error: Unknown model '{model_name}'[/red]")
         list()
         raise typer.Exit(1)
 
-    pulled : bool = True
+    pulled: bool = True
     if models[model_name]["downloaded"] != "yes":
         pulled = OllamaManager.pull_model(model_name)
-    
+
     if pulled:
         models = ConfigManager.get_models()
         config = ConfigManager.get_config()
         # deactivated old model
-        models[config['model_name']]['status'] = "disabled"
+        models[config["model_name"]]["status"] = "disabled"
 
-        models[model_name]["status"] ="active"
-        config['model_name'] = model_name
+        models[model_name]["status"] = "active"
+        config["model_name"] = model_name
 
         ConfigManager.save_config(config)
         ConfigManager.save_models(models)
@@ -283,7 +304,9 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
 
 @app.command()
 def his(
-    limit: Optional[int] = typer.Option(None, "--limit", "-n", help="Display only the latest n commit messages"),
+    limit: Optional[int] = typer.Option(
+        None, "--limit", "-n", help="Display only the latest n commit messages"
+    ),
 ):
     """Display the git commit history, optionally limiting to n recent commits."""
     try:
@@ -292,7 +315,7 @@ def his(
             git_cmd = ["git", "log", "--oneline"]
             if limit is not None:
                 git_cmd.extend([f"-n", str(limit)])
-            
+
             result = subprocess.run(
                 git_cmd,
                 check=True,
@@ -300,15 +323,13 @@ def his(
                 text=True,
                 creationflags=subprocess.DETACHED_PROCESS if os.name == "nt" else 0,
             )
-            
+
             if result.stdout:
                 # Create a title based on whether limit is used
                 title = f"Latest {limit} Commits" if limit else "Commit History"
-                console.print(Panel(
-                    result.stdout.strip(),
-                    title=title,
-                    border_style="blue"
-                ))
+                console.print(
+                    Panel(result.stdout.strip(), title=title, border_style="blue")
+                )
                 return True
             else:
                 console.print("[yellow]No commit history found.[/yellow]")
@@ -318,11 +339,11 @@ def his(
         if "fatal: your current branch does not have any commits yet" in e.stderr:
             console.print("[yellow]No commits found in this repository yet.[/yellow]")
         else:
-            console.print(Panel(
-                e.stderr.strip(),
-                title="Error Fetching History",
-                border_style="red"
-            ))
+            console.print(
+                Panel(
+                    e.stderr.strip(), title="Error Fetching History", border_style="red"
+                )
+            )
         return False
 
     except FileNotFoundError:
@@ -332,6 +353,7 @@ def his(
     except Exception as e:
         console.print(f"[red]Unexpected error: {str(e)}[/red]")
         return False
-              
+
+
 if __name__ == "__main__":
     app()

@@ -19,11 +19,11 @@ class ConfigManager:
     MODELS_FILE = CONFIG_DIR / "models.json"
 
     DEFAULT_MODELS = {
-        "deepseek-r1:1.5b":{
+        "deepseek-r1:1.5b": {
             "description": "State of the art reasoning model for your commit messages.",
-            "size":"1.1GB",
-            "status":"disabled",
-            "downloaded":"no"
+            "size": "1.1GB",
+            "status": "disabled",
+            "downloaded": "no",
         },
         "llama3.2:1b": {
             "description": "Lightweight model suitable for basic commit messages",
@@ -42,7 +42,7 @@ class ConfigManager:
             "size": "2.0GB",
             "status": "disabled",
             "downloaded": "no",
-        }
+        },
     }
 
     @classmethod

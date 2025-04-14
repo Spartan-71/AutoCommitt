@@ -1,13 +1,13 @@
 ![new_banner](https://github.com/user-attachments/assets/4f867876-3651-4cc7-9cf1-a136c44b73ec)
 
 <div align="center">
-   
+
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/autocommitt.svg)](https://badge.fury.io/py/autocommitt)
 ![PyPI Downloads](https://static.pepy.tech/badge/autocommitt)
-   
+
 AutoCommit is a FOSS **AI-powered CLI tool** that generates context-aware commit messages locally.
-   
+
 
 
 </div>
@@ -23,11 +23,11 @@ AutoCommit is a FOSS **AI-powered CLI tool** that generates context-aware commit
 ### Prerequisites
 
 - **Ollama**: Download and install ollama from [offical website](https://ollama.com/download).
-- **RAM** (minimum):  
-   - 8GB for smaller models (<=3B parameters)  
+- **RAM** (minimum):
+   - 8GB for smaller models (<=3B parameters)
    - 16GB for optimal performance
 - **GPU** (Optional): Boosts performance, but not required
-  
+
 ### Installation
 
 It is recommended to use a virtual environment.
@@ -51,24 +51,24 @@ pip install -U autocommitt
 
 ## Basic Usage
 
-1. **Stage Your Changes**  
-   Stage the files you want to commit using Git:  
+1. **Stage Your Changes**
+   Stage the files you want to commit using Git:
    ```bash
    git add <files...>
    ```
 
-2. **Generate and Edit Commit Messages**  
-   Generate a commit message based on your staged changes:  
+2. **Generate and Edit Commit Messages**
+   Generate a commit message based on your staged changes:
    ```bash
    act gen
-   ```  
+   ```
 
-   - The tool generates a message and allows you to review and edit it before committing.  
+   - The tool generates a message and allows you to review and edit it before committing.
 
-   - To **automatically push** the commit to the remote repository, use the `-p` or `--push` flag:  
+   - To **automatically push** the commit to the remote repository, use the `-p` or `--push` flag:
      ```bash
      act gen -p
-     ```  
+     ```
 
 ## Additional Commands
 
