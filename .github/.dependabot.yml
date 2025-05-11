@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # For Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"  # Adjust if pyproject.toml is in a subfolder
+    schedule:
+      interval: "montly"  # Options: "daily", "weekly", "monthly"
+    allow:
+      - dependency-type: "all"  # Options: "direct", "indirect", "all"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  # For GitHub Actions (optional but useful)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
