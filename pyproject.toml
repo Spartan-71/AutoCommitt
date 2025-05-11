@@ -27,6 +27,7 @@ classifiers = [
 project.urls = "https://github.com/Spartan-71/autocommitt"
 
 requires-python = ">=3.12"
+
 dependencies = [
     "ollama>=0.4.4",
     "platformdirs>=4.3.6",
@@ -35,6 +36,9 @@ dependencies = [
     "typer>=0.15.1",
     "pyreadline3; sys_platform == 'win32'"
 ]
+
+[project.optional-dependencies]
+dev = ["pre-commit"]
 
 [project.scripts]
 autocommitt = "autocommitt.cli.main:app"

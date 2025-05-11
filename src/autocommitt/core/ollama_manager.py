@@ -4,8 +4,6 @@ import psutil
 import platform
 import requests
 import subprocess
-from pathlib import Path
-from typing import Optional, Dict
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
@@ -15,7 +13,6 @@ console = Console()
 
 
 class OllamaManager:
-
     @staticmethod
     def is_server_running() -> bool:
         """Checks if the Ollama server is running at the given URL."""
@@ -36,7 +33,7 @@ class OllamaManager:
         except requests.Timeout:
             # console.print("[red]Ollama server request timed out.[/red]")
             return False
-        except requests.RequestException as e:
+        except requests.RequestException:
             # console.print(f"[red]Unexpected error while checking server: {str(e)}[/red]")
             return False
 
@@ -207,7 +204,7 @@ class OllamaManager:
 
         except FileNotFoundError:
             console.print(
-                f"[yellow]ollama command not found. Please ensure Ollama is installed and in PATH.[/yellow]"
+                "[yellow]ollama command not found. Please ensure Ollama is installed and in PATH.[/yellow]"
             )
             return False
 
@@ -255,7 +252,7 @@ class OllamaManager:
                 TimeElapsedColumn(),
                 console=console,
             ) as progress:
-                task = progress.add_task(f"Downloading {model_name}...", total=None)
+                progress.add_task(f"Downloading {model_name}...", total=None)
 
                 try:
                     # Run the pull command with timeout

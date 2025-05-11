@@ -1,7 +1,7 @@
 import os
 import ollama
 import subprocess
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional
 
 
 class CommitManager:

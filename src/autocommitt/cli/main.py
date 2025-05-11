@@ -2,15 +2,12 @@ import os
 import time
 import typer
 import shutil
-import signal
-import platform
 import subprocess
-from pathlib import Path
 from rich.text import Text
 from rich.table import Table
 from rich.panel import Panel
 from rich.console import Console
-from typing import Optional, Dict
+from typing import Optional
 
 from autocommitt.core.commit_manager import CommitManager
 from autocommitt.core.ollama_manager import OllamaManager
@@ -48,7 +45,6 @@ def start():
 
     # First check if server is already running
     if not OllamaManager.is_server_running():
-
         started: bool = OllamaManager.start_ollama_service()
 
         if started:
@@ -70,7 +66,7 @@ def start():
         time.sleep(1)
         if not OllamaManager.pull_model(model_name):
             console.print(
-                f"[red]Failed to pull default model. Please check your internet connection[/red]"
+                "[red]Failed to pull default model. Please check your internet connection[/red]"
             )
             return None
     else:
@@ -107,7 +103,7 @@ def stop():
             console.print("[green]Ollama server stopped successfully.[/green]")
 
     else:
-        console.print(f"[yellow]Warning: No Ollama server running found![/yellow]")
+        console.print("[yellow]Warning: No Ollama server running found![/yellow]")
 
 
 @app.command()
@@ -116,9 +112,9 @@ def gen(
 ):
     """Generates a editable commit message."""
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print("[red]Error: Ollama server is not running![/red]")
         console.print(
-            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+            "Start the ollama server by running [cyan]autocommitt start[/cyan] command."
         )
         raise typer.Exit(1)
 
@@ -130,10 +126,10 @@ def gen(
 
     # Get selected model
     config = ConfigManager.get_config()
-    models = ConfigManager.get_models()
+    ConfigManager.get_models()
 
     CommitManager.model_name = config["model_name"]
-    console.print(f"[cyan]Generating...[/cyan]")
+    console.print("[cyan]Generating...[/cyan]")
 
     # Here you would integrate with your LLM to generate the message
     initial_message = CommitManager.generate_commit_message(changed_files)
@@ -146,9 +142,9 @@ def gen(
     # Create commit
     done: bool = CommitManager.perform_git_commit(final_message)
     if done:
-        console.print(f"[green]Commit Sucessfull![/green]")
+        console.print("[green]Commit Sucessfull![/green]")
     else:
-        console.print(f"[red]Commit FAILED![/red]")
+        console.print("[red]Commit FAILED![/red]")
 
     if push:
         try:
@@ -163,11 +159,11 @@ def gen(
             if result.stdout:
                 console.print(result.stdout.strip())
 
-            console.print(f"[green]Push successful![/green]")
+            console.print("[green]Push successful![/green]")
             return True
 
         except subprocess.CalledProcessError as e:
-            console.print(f"[red]Error: Auto pushing FAILED![/red]")
+            console.print("[red]Error: Auto pushing FAILED![/red]")
             console.print(f"[red]{e.stderr}[/red]")
             return False
 
@@ -230,14 +226,14 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
     """Delete a model from available models"""
 
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print("[red]Error: Ollama server is not running![/red]")
         console.print(
-            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+            "Start the ollama server by running [cyan]autocommitt start[/cyan] command."
         )
         raise typer.Exit(1)
 
     models = ConfigManager.get_models()
-    config = ConfigManager.get_config()
+    ConfigManager.get_config()
 
     # Check if model exists
     if not OllamaManager.is_model_present(model_name):
@@ -248,7 +244,7 @@ def rm(model_name: str = typer.Argument(..., help="Name of the model to delete")
 
     # Check if it's a default model
     if models[model_name].get("status") == "active":
-        console.print(f"[red]Error: Cannot remove currently active model![/red]")
+        console.print("[red]Error: Cannot remove currently active model![/red]")
         console.print(
             "Please switch to a different model first using the 'use' command."
         )
@@ -268,9 +264,9 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
     """Select which model to use for generating commit messages"""
 
     if not OllamaManager.is_server_running():
-        console.print(f"[red]Error: Ollama server is not running![/red]")
+        console.print("[red]Error: Ollama server is not running![/red]")
         console.print(
-            f"Start the ollama server by running [cyan]autocommitt start[/cyan] command."
+            "Start the ollama server by running [cyan]autocommitt start[/cyan] command."
         )
         raise typer.Exit(1)
 
@@ -314,7 +310,7 @@ def his(
             # Build the git command based on whether limit is provided
             git_cmd = ["git", "log", "--oneline"]
             if limit is not None:
-                git_cmd.extend([f"-n", str(limit)])
+                git_cmd.extend(["-n", str(limit)])
 
             result = subprocess.run(
                 git_cmd,
