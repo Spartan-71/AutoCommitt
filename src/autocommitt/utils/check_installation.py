@@ -4,11 +4,13 @@ import shutil
 import subprocess
 import requests
 
+
 def is_ollama_installed():
     """
     Checks if Ollama is installed on the system by verifying its presence in PATH.
     """
     return shutil.which("ollama") is not None
+
 
 def download_and_install_ollama():
     """
@@ -41,7 +43,9 @@ def download_and_install_ollama():
                 file.write(chunk)
         print(f"Ollama downloaded successfully as '{filename}'.")
     else:
-        raise RuntimeError(f"Failed to download Ollama. HTTP status code: {response.status_code}")
+        raise RuntimeError(
+            f"Failed to download Ollama. HTTP status code: {response.status_code}"
+        )
 
     # Make executable on Linux/macOS and move to a suitable location
     if system in ["linux", "darwin"]:
