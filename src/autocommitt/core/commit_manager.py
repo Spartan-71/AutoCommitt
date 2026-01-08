@@ -100,7 +100,7 @@ class CommitManager:
 
     @staticmethod
     def normalize_commit_message(message: str) -> str:
-        lines = [l.strip() for l in message.splitlines() if l.strip()]
+        lines = [line.strip() for line in message.splitlines() if line.strip()]
 
         if not lines:
             return "chore: update files"
