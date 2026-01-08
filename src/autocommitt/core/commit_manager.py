@@ -141,7 +141,6 @@ class CommitManager:
 
         return title
 
-
     @staticmethod
     def edit_commit_message(initial_message: str) -> str:
         """
@@ -181,7 +180,9 @@ class CommitManager:
         try:
             import tempfile
 
-            with tempfile.NamedTemporaryFile(mode="w", delete=False, encoding="utf-8") as f:
+            with tempfile.NamedTemporaryFile(
+                mode="w", delete=False, encoding="utf-8"
+            ) as f:
                 f.write(message)
                 commit_file = f.name
 
