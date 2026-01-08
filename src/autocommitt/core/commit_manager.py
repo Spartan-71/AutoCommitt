@@ -67,24 +67,20 @@ class CommitManager:
         Returns:
             str: Generated commit message.
         """
-        system_prompt = """You are a Git expert specializing in concise and meaningful commit messages based on output of git diff command.
-                        Choose a type from below that best describes the git diff output :
-                            fix: A bug fix,
-                            docs: Documentation only changes,
-                            style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc),
-                            refactor: A code change that neither fixes a bug nor adds a feature,
-                            perf: A code change that improves performance,
-                            test: Adding missing tests or correcting existing tests,
-                            build: Changes that affect the build system or external dependencies,
-                            ci: Changes to our CI configuration files and scripts,
-                            chore: Other changes that don't modify src or test files,
-                            revert: Reverts a previous commit',
-                            feat: A new feature,
-                        Now, generate a concise git commit message written in present tense in the format type: description for the output of git diff command which is provided by the user.
-                        The git diff output can have changes in multiple files so analyze that properly and generate a commit message all taking all the changes into consideration.
-                        Exclude anything unnecessary such as translation. Your entire response will be passed directly into git commit.
-                        Generate only one commit message of maximum length 60 characters, no explanations.
-                        """
+        system_prompt = """You are a Git commit message generator.
+
+            Rules (mandatory):
+            - Output plain text only.
+            - Line 1: concise title in imperative mood, max 72 characters.
+            - Line 2: must be empty.
+            - Remaining lines: bullet points describing individual changes.
+            - Do not repeat the title in the body.
+            - Do not include explanations, markdown, or quotes.
+
+            Context:
+            You are given the output of `git diff --staged`.
+            Analyze all changes and generate a structured commit message.
+            """
 
         message = ""
         stream = ollama.chat(
@@ -100,7 +96,51 @@ class CommitManager:
             content = chunk["message"]["content"]
             message += content
 
-        return message.strip()
+        return CommitManager.normalize_commit_message(message.strip())
+
+    @staticmethod
+    def normalize_commit_message(message: str) -> str:
+        lines = [l.strip() for l in message.splitlines() if l.strip()]
+
+        if not lines:
+            return "chore: update files"
+
+        first = lines[0]
+
+        # If the model did NOT give a real title, synthesize one
+        if (
+            first.startswith("-")
+            or first.lower().startswith("here is")
+            or len(first.split()) > 12
+        ):
+            title = "chore: update project files"
+            body_lines = lines
+        else:
+            title = first[:72]
+            body_lines = lines[1:]
+
+        bullets = []
+        for line in body_lines:
+            line = line.lstrip("-*• ").strip()
+
+            # Drop LLM meta commentary
+            lowered = line.lower()
+            if (
+                lowered.startswith("here is")
+                or lowered.startswith("note that")
+                or "i've followed" in lowered
+                or "rules specified" in lowered
+                or "concise title" in lowered
+                or "bullet points" in lowered
+            ):
+                continue
+            if line:
+                bullets.append(f"- {line}")
+        if bullets:
+            return f"{title}\n\n" + "\n".join(bullets)
+
+        return title
+
 
     @staticmethod
     def edit_commit_message(initial_message: str) -> str:
@@ -138,26 +178,20 @@ class CommitManager:
 
     @staticmethod
     def perform_git_commit(message: str) -> bool:
-        """
-        Perform Git commit with the provided message.
-
-        Args:
-            message (str): Commit message.
-
-        Returns:
-            bool: True if commit was successful, False otherwise.
-        """
         try:
-            # Use shell=False for security and to avoid shell injection
+            import tempfile
+
+            with tempfile.NamedTemporaryFile(mode="w", delete=False, encoding="utf-8") as f:
+                f.write(message)
+                commit_file = f.name
+
             subprocess.run(
-                ["git", "commit", "-m", message],
-                check=True,  # Raise an exception if the command fails
+                ["git", "commit", "-F", commit_file],
+                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
-                encoding="utf-8",
-                errors="replace",
             )
             return True
         except subprocess.CalledProcessError as e:
