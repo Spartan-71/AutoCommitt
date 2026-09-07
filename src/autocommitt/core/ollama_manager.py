@@ -1,9 +1,10 @@
 import os
-import time
-import psutil
 import platform
-import requests
 import subprocess
+import time
+
+import psutil
+import requests
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
@@ -85,7 +86,7 @@ class OllamaManager:
             return False
 
         except Exception as e:
-            console.print(f"[red]An unexpected error occurred: {str(e)}[/red]")
+            console.print(f"[red]An unexpected error occurred: {e!s}[/red]")
             return False
 
     @staticmethod
@@ -152,7 +153,7 @@ class OllamaManager:
             return False
 
         except Exception as e:
-            console.print(f"[red]An unexpected error occurred: {str(e)}[/red]")
+            console.print(f"[red]An unexpected error occurred: {e!s}[/red]")
             return False
 
     @staticmethod
@@ -210,7 +211,7 @@ class OllamaManager:
 
         except Exception as e:
             console.print(
-                f"[red]Unexpected error checking for model '{model_name}': {str(e)}[/red]"
+                f"[red]Unexpected error checking for model '{model_name}': {e!s}[/red]"
             )
             return False
 
@@ -304,7 +305,7 @@ class OllamaManager:
             )
             return False
         except Exception as e:
-            console.print(f"[red]Unexpected error while pulling model: {str(e)}[/red]")
+            console.print(f"[red]Unexpected error while pulling model: {e!s}[/red]")
             return False
 
     @staticmethod
@@ -347,5 +348,5 @@ class OllamaManager:
             )
             return False
         except Exception as e:
-            console.print(f"[red]Unexpected error while deleting model: {str(e)}[/red]")
+            console.print(f"[red]Unexpected error while deleting model: {e!s}[/red]")
             return False

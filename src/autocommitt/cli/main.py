@@ -1,13 +1,13 @@
 import os
-import time
-import typer
 import shutil
 import subprocess
-from rich.text import Text
-from rich.table import Table
-from rich.panel import Panel
+import time
+
+import typer
 from rich.console import Console
-from typing import Optional
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 from autocommitt.core.commit_manager import CommitManager
 from autocommitt.core.ollama_manager import OllamaManager
@@ -51,7 +51,7 @@ def start():
             time.sleep(3)
             console.print("[green]Ollama server started successfully![/green]")
         else:
-            return None
+            return
 
     else:
         console.print("[yellow]Warning: Ollama server is already running![/yellow]")
@@ -68,10 +68,10 @@ def start():
             console.print(
                 "[red]Failed to pull default model. Please check your internet connection[/red]"
             )
-            return None
+            return
     else:
         console.print(f"[green]Default model {model_name} is ready![/green]")
-    return None
+    return
 
 
 @app.command()
@@ -174,7 +174,7 @@ def gen(
             return False
 
         except Exception as e:
-            console.print(f"[red]Unexpected error: {str(e)}[/red]")
+            console.print(f"[red]Unexpected error: {e!s}[/red]")
             return False
 
 
@@ -300,7 +300,7 @@ def use(model_name: str = typer.Argument(..., help="Name of the model to use")):
 
 @app.command()
 def his(
-    limit: Optional[int] = typer.Option(
+    limit: int | None = typer.Option(
         None, "--limit", "-n", help="Display only the latest n commit messages"
     ),
 ):
@@ -347,7 +347,7 @@ def his(
         return False
 
     except Exception as e:
-        console.print(f"[red]Unexpected error: {str(e)}[/red]")
+        console.print(f"[red]Unexpected error: {e!s}[/red]")
         return False
 
 

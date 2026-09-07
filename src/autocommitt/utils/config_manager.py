@@ -1,7 +1,7 @@
 import json
-from typing import Dict
 from pathlib import Path
-from platformdirs import user_config_dir, user_cache_dir
+
+from platformdirs import user_cache_dir, user_config_dir
 
 
 class ConfigManager:
@@ -62,7 +62,7 @@ class ConfigManager:
             cls.save_models(cls.DEFAULT_MODELS)
 
     @classmethod
-    def get_config(cls) -> Dict:
+    def get_config(cls) -> dict:
         """
         Retrieves current configuration.
 
@@ -73,7 +73,7 @@ class ConfigManager:
         return json.loads(cls.CONFIG_FILE.read_text())
 
     @classmethod
-    def get_models(cls) -> Dict:
+    def get_models(cls) -> dict:
         """
         Retrieves available model configurations.
 
@@ -84,7 +84,7 @@ class ConfigManager:
         return json.loads(cls.MODELS_FILE.read_text())
 
     @classmethod
-    def save_config(cls, config: Dict) -> None:
+    def save_config(cls, config: dict) -> None:
         """
         Saves configuration settings to file.
 
@@ -94,7 +94,7 @@ class ConfigManager:
         cls.CONFIG_FILE.write_text(json.dumps(config, indent=2))
 
     @classmethod
-    def save_models(cls, models: Dict) -> None:
+    def save_models(cls, models: dict) -> None:
         """
         Saves model configurations to file.
 

@@ -1,7 +1,7 @@
 import os
-import ollama
 import subprocess
-from typing import Tuple, Optional
+
+import ollama
 
 
 class CommitManager:
@@ -10,7 +10,7 @@ class CommitManager:
     model_name: str = "llama3.2:3b"
 
     @staticmethod
-    def execute_git_command(command: list[str]) -> Tuple[str, Optional[str]]:
+    def execute_git_command(command: list[str]) -> tuple[str, str | None]:
         """
         Execute a Git command safely with cross-platform compatibility.
 
@@ -36,7 +36,7 @@ class CommitManager:
             return None, e.stderr
 
     @staticmethod
-    def check_staged_changes() -> Optional[str]:
+    def check_staged_changes() -> str | None:
         """
         Check for staged Git changes.
 
