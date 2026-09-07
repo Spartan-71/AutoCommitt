@@ -2,6 +2,7 @@ import os
 import platform
 import shutil
 import subprocess
+
 import requests
 
 
@@ -39,8 +40,7 @@ def download_and_install_ollama():
     response = requests.get(download_url, stream=True)
     if response.status_code == 200:
         with open(filename, "wb") as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
+            file.writelines(response.iter_content(chunk_size=8192))
         print(f"Ollama downloaded successfully as '{filename}'.")
     else:
         raise RuntimeError(
